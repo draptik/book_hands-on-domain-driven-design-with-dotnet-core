@@ -1,3 +1,4 @@
+using System;
 using Marketplace.Framework;
 
 namespace Marketplace.Domain
@@ -6,8 +7,18 @@ namespace Marketplace.Domain
     {
         public decimal Amount { get; }
 
-        public Money(decimal amount) => Amount = amount;
+        public static Money FromDecimal(decimal amount) => new Money(amount);
         
+        protected Money(decimal amount)
+        {
+            if (decimal.Round(amount, 2) != amount)
+            {
+                throw new ArgumentOutOfRangeException(nameof(amount),
+                    "Amount cannot have more than two decimals");
+            }
+            Amount = amount;
+        }
+
         public Money Add(Money summand) => new Money(Amount + summand.Amount);
         
         public Money Subtract(Money subtrahend) => new Money(Amount - subtrahend.Amount);
