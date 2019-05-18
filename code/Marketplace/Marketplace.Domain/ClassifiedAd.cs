@@ -22,5 +22,13 @@ namespace Marketplace.Domain
         public void UpdateText(string text) => _text = text;
 
         public void UpdatePrice(decimal price) => _price = price;
+
+        public enum ClassifiedAdState
+        {
+            PendingReview,
+            Active,
+            Inactive,
+            MarkedAsSoled
+        }
     }
 }
