@@ -1,5 +1,3 @@
-using System;
-
 namespace Marketplace.Domain
 {
     public class ClassifiedAd
@@ -19,12 +17,26 @@ namespace Marketplace.Domain
         public Price Price { get; private set; }
         public ClassifiedAdState State { get; private set; }
         
+        public UserId ApprovedBy { get; private set; }
+
         public void SetTitle(ClassifiedAdTitle title) => Title = title;
 
         public void UpdateText(ClassifiedAdText text) => Text = text;
 
         public void UpdatePrice(Price price) => Price = price;
 
+        public void RequestToPublish()
+        {
+            if (Title == null)
+                throw new InvalidEntityStateException(this, "title cannot be empty");
+            if (Text == null)
+                throw new InvalidEntityStateException(this, "text cannot be empty");
+            if (Price?.Amount == 0)
+                throw new InvalidEntityStateException(this, "price cannot be zero");
+
+            State = ClassifiedAdState.PendingReview;
+        }
+        
         public enum ClassifiedAdState
         {
             PendingReview,
