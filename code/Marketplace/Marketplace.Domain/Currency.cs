@@ -2,7 +2,7 @@ using Marketplace.Framework;
 
 namespace Marketplace.Domain
 {
-    public class CurrencyDetails : Value<CurrencyDetails>
+    public class Currency : Value<Currency>
     {
         // TODO why do we have public setters in Value Object?
         
@@ -12,6 +12,6 @@ namespace Marketplace.Domain
         
         public int DecimalPlaces { get; set; }
 
-        public static CurrencyDetails None = new CurrencyDetails {InUse = false};
+        public static Currency None = new Currency {InUse = false};
     }
 }

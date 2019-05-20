@@ -22,7 +22,7 @@ namespace Marketplace.Domain
         
         private readonly string _value;
 
-        private ClassifiedAdTitle(string value)
+        public ClassifiedAdTitle(string value)
         {
             if (value.Length > 100)
             {

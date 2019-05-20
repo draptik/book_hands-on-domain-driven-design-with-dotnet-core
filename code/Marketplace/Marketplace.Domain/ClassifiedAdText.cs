@@ -10,7 +10,7 @@ namespace Marketplace.Domain
         
         private readonly string _value;
 
-        private ClassifiedAdText(string value)
+        public ClassifiedAdText(string value)
         {
             if (value.Length > 100)
             {

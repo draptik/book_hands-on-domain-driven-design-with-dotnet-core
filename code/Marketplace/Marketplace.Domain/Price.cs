@@ -4,7 +4,8 @@ namespace Marketplace.Domain
 {
     public class Price : Money
     {
-        protected Price(decimal amount, string currencyCode, ICurrencyLookup currencyLookup) : base(amount, currencyCode, currencyLookup)
+        public Price(decimal amount, string currencyCode) 
+            : base(amount, new Currency{CurrencyCode = currencyCode})
         {
             if (amount < 0)
             {
@@ -14,7 +15,7 @@ namespace Marketplace.Domain
         }
         
         public new static Price FromDecimal(decimal amount, string currency, ICurrencyLookup currencyLookup) 
-            => new Price(amount, currency, currencyLookup);
+            => new Price(amount, currency);
 
     }
 }

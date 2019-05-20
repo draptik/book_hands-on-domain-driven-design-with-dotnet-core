@@ -25,14 +25,14 @@ namespace Marketplace.Domain
             Currency = currency;
         }
 
-        private Money(decimal amount, CurrencyDetails currency)
+        internal Money(decimal amount, Currency currency)
         {
             Amount = amount;
             Currency = currency;
         }
 
         public decimal Amount { get; }
-        public CurrencyDetails Currency { get; }
+        public Currency Currency { get; }
 
         public static Money FromDecimal(decimal amount, string currency, ICurrencyLookup currencyLookup) 
             => new Money(amount, currency, currencyLookup);
