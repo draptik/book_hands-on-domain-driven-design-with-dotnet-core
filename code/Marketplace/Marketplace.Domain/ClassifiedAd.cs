@@ -1,8 +1,8 @@
-using System.IO.MemoryMappedFiles;
+using Marketplace.Framework;
 
 namespace Marketplace.Domain
 {
-    public class ClassifiedAd
+    public class ClassifiedAd : Entity
     {
         public ClassifiedAdId Id { get; private set; }
 
@@ -11,6 +11,12 @@ namespace Marketplace.Domain
             Id = id;
             OwnerId = ownerId;
             State = ClassifiedAdState.Inactive;
+            EnsureValidState();
+            Raise(new Events.ClassifiedAdCreated
+            {
+                Id = id,
+                OwnerId = ownerId
+            });
         }
         
         public UserId OwnerId { get; }
@@ -21,22 +27,45 @@ namespace Marketplace.Domain
         
         public UserId ApprovedBy { get; private set; }
 
-        public void SetTitle(ClassifiedAdTitle title) => Title = title;
+        public void SetTitle(ClassifiedAdTitle title)
+        {
+            Title = title;
+            EnsureValidState();
+            Raise(new Events.ClassifiedAdTitleChanged
+            {
+                Id = Id,
+                Title = title
+            });
+        }
 
-        public void UpdateText(ClassifiedAdText text) => Text = text;
+        public void UpdateText(ClassifiedAdText text)
+        {
+            Text = text;
+            EnsureValidState();
+            Raise(new Events.ClassifiedAdTextUpdated
+            {
+                Id = Id,
+                Text = text
+            });
+        }
 
-        public void UpdatePrice(Price price) => Price = price;
+        public void UpdatePrice(Price price)
+        {
+            Price = price;
+            EnsureValidState();
+            Raise(new Events.ClassifiedAdPriceUpdated
+            {
+                Id = Id,
+                Price = Price.Amount,
+                CurrencyCode = price.Currency.CurrencyCode
+            });
+        }
 
         public void RequestToPublish()
         {
-            if (Title == null)
-                throw new InvalidEntityStateException(this, "title cannot be empty");
-            if (Text == null)
-                throw new InvalidEntityStateException(this, "text cannot be empty");
-            if (Price?.Amount == 0)
-                throw new InvalidEntityStateException(this, "price cannot be zero");
-
             State = ClassifiedAdState.PendingReview;
+            EnsureValidState();
+            Raise(new Events.ClassifiedAdSentForReview {Id = Id});
         }
 
         public void EnsureValidState()

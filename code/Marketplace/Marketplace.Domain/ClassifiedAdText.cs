@@ -20,5 +20,7 @@ namespace Marketplace.Domain
             }
             _value = value;
         }
+        
+        public static implicit operator string(ClassifiedAdText self) => self._value;
     }
 }
