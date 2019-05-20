@@ -29,9 +29,8 @@ namespace Marketplace.Domain
                 throw new ArgumentOutOfRangeException(
                     "Title cannot be longer than 100 characters", 
                     nameof(value));
-                
-                _value = value;
             }
+            _value = value;
         }
     }
 }

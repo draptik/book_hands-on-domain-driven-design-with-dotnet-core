@@ -1,3 +1,5 @@
+using System.IO.MemoryMappedFiles;
+
 namespace Marketplace.Domain
 {
     public class ClassifiedAd
@@ -35,6 +37,40 @@ namespace Marketplace.Domain
                 throw new InvalidEntityStateException(this, "price cannot be zero");
 
             State = ClassifiedAdState.PendingReview;
+        }
+
+        public void EnsureValidState()
+        {
+            bool stateValid;
+            switch (State)
+            {
+                case ClassifiedAdState.PendingReview:
+                    stateValid = Title != null
+                        && Text != null
+                        && Price?.Amount > 0;
+                    break;
+                case ClassifiedAdState.Active:
+                    stateValid = Title != null
+                                 && Text != null
+                                 && Price?.Amount > 0
+                                 && ApprovedBy != null;
+                    break;
+                default:
+                    stateValid = true;
+                    break;
+            }
+
+            
+            var valid =
+                Id != null &&
+                OwnerId != null &&
+                stateValid;
+
+            if (!valid)
+            {
+                throw new InvalidEntityStateException(
+                    this, $"Post-checks failed in state {State}");
+            }
         }
         
         public enum ClassifiedAdState

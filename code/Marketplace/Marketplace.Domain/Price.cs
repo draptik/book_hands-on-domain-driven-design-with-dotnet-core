@@ -12,5 +12,9 @@ namespace Marketplace.Domain
                     "Price cannot be negative", nameof(amount));
             }
         }
+        
+        public new static Price FromDecimal(decimal amount, string currency, ICurrencyLookup currencyLookup) 
+            => new Price(amount, currency, currencyLookup);
+
     }
 }
