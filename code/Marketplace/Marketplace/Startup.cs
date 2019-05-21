@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Marketplace.Api;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -24,6 +25,7 @@ namespace Marketplace
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton(new ClassifiedAdsApplicationService());
             services.AddMvc();
             services.AddSwaggerGen(c =>
                 c.SwaggerDoc("v1",
