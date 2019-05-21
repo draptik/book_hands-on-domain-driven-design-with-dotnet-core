@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using static System.Environment;
 using static System.Reflection.Assembly;
 
 
@@ -10,9 +11,8 @@ namespace Marketplace
     public static class Program
     {
         static Program()
+            // ReSharper disable once PossibleNullReferenceException
             => CurrentDirectory = Path.GetDirectoryName(GetEntryAssembly().Location);
-
-        private static string CurrentDirectory { get; }
 
         public static void Main(string[] args)
         {
