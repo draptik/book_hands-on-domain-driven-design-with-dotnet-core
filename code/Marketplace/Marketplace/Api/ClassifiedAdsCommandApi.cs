@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Marketplace.Api
 {
+    [Route("/ad")]
     public class ClassifiedAdsCommandApi : Controller
     {
         [HttpPost]
