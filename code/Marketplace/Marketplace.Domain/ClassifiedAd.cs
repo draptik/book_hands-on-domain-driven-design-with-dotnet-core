@@ -1,8 +1,11 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Marketplace.Framework;
 
 namespace Marketplace.Domain
 {
-    public class ClassifiedAd : Entity<ClassifiedAdId>
+    public class ClassifiedAd : AggregateRoot<ClassifiedAdId>
     {
         public ClassifiedAdId Id { get; private set; }
 
@@ -21,6 +24,9 @@ namespace Marketplace.Domain
         
         public UserId ApprovedBy { get; private set; }
 
+        public List<Picture> Pictures { get; private set; }
+        
+        
         public void SetTitle(ClassifiedAdTitle title) =>
             Apply(new Events.ClassifiedAdTitleChanged
             {
@@ -43,6 +49,17 @@ namespace Marketplace.Domain
                 CurrencyCode = price.Currency.CurrencyCode
             });
 
+        public void AddPicture(Uri pictureUrl, PictureSize size)
+            => Apply(new Events.PictureAddedToClassifiedAd
+            {
+                PictureId = new Guid(),
+                ClassifiedAdId = Id,
+                Url = pictureUrl.ToString(),
+                Height = size.Height,
+                Width = size.Width,
+                Order = Pictures.Max(x => x.Order)
+            });
+        
         public void RequestToPublish() => 
             Apply(new Events.ClassifiedAdSentForReview {Id = Id});
 
