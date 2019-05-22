@@ -93,36 +93,26 @@ namespace Marketplace.Domain
 
         protected override void EnsureValidState()
         {
-            bool stateValid;
-            switch (State)
-            {
-                case ClassifiedAdState.PendingReview:
-                    stateValid = Title != null
-                        && Text != null
-                        && Price?.Amount > 0;
-                    break;
-                case ClassifiedAdState.Active:
-                    stateValid = Title != null
-                                 && Text != null
-                                 && Price?.Amount > 0
-                                 && ApprovedBy != null;
-                    break;
-                default:
-                    stateValid = true;
-                    break;
-            }
-
-            
             var valid =
                 Id != null &&
                 OwnerId != null &&
-                stateValid;
+                (State switch
+                {
+                    ClassifiedAdState.PendingReview =>
+                        Title != null
+                        && Text != null
+                        && Price?.Amount > 0,
+                    ClassifiedAdState.Active =>
+                        Title != null
+                        && Text != null
+                        && Price?.Amount > 0
+                        && ApprovedBy != null,
+                    _ => true
+                });
 
             if (!valid)
-            {
                 throw new InvalidEntityStateException(
                     this, $"Post-checks failed in state {State}");
-            }
         }
         
         public enum ClassifiedAdState
