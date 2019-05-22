@@ -84,6 +84,11 @@ namespace Marketplace.Domain
                 case Events.ClassifiedAdSentForReview e:
                     State = ClassifiedAdState.PendingReview;
                     break;
+                case Events.PictureAddedToClassifiedAd e:
+                    var picture = new Picture(Apply);
+                    ApplyToEntity(picture, e);
+                    Pictures.Add(picture);
+                    break;
             }
         }
 
