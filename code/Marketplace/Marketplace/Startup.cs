@@ -25,7 +25,7 @@ namespace Marketplace
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton(new ClassifiedAdsApplicationService());
+            services.AddSingleton<ClassifiedAdsApplicationService>();
             services.AddMvc();
             services.AddSwaggerGen(c =>
                 c.SwaggerDoc("v1",
