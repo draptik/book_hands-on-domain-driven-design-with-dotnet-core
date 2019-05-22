@@ -10,5 +10,10 @@ namespace Marketplace.Domain
         public ClassifiedAdId(Guid value) => _value = value;
         
         public static implicit operator Guid(ClassifiedAdId self) => self._value;
+        
+        public override string ToString() => _value.ToString();
+        
+        public static implicit operator ClassifiedAdId(string value) 
+            => new ClassifiedAdId(Guid.Parse(value));
     }
 }
