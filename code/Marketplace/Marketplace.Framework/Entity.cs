@@ -3,11 +3,12 @@ using System.Linq;
 
 namespace Marketplace.Framework
 {
-    public abstract class Entity
+    public abstract class Entity<TId>
+        where TId : Value<TId>
     {
-        private readonly List<object> _events;
+        private readonly List<object> _changes;
 
-        protected Entity() => _events = new List<object>();
+        protected Entity() => _changes = new List<object>();
 
         protected abstract void When(object @event);
 
@@ -17,11 +18,11 @@ namespace Marketplace.Framework
         {
             When(@event);
             EnsureValidState();
-            _events.Add(@event);
+            _changes.Add(@event);
         }
 
-        public IEnumerable<object> GetChanges() => _events.AsEnumerable();
+        public IEnumerable<object> GetChanges() => _changes.AsEnumerable();
 
-        public void ClearChanges() => _events.Clear();
+        public void ClearChanges() => _changes.Clear();
     }
 }

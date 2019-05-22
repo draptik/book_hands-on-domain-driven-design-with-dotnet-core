@@ -2,22 +2,17 @@ using Marketplace.Framework;
 
 namespace Marketplace.Domain
 {
-    public class ClassifiedAd : Entity
+    public class ClassifiedAd : Entity<ClassifiedAdId>
     {
         public ClassifiedAdId Id { get; private set; }
 
-        public ClassifiedAd(ClassifiedAdId id, UserId ownerId)
-        {
-            Id = id;
-            OwnerId = ownerId;
-            State = ClassifiedAdState.Inactive;
+        public ClassifiedAd(ClassifiedAdId id, UserId ownerId) =>
             Apply(new Events.ClassifiedAdCreated
             {
                 Id = id,
                 OwnerId = ownerId
             });
-        }
-        
+
         public UserId OwnerId { get; private set; }
         public ClassifiedAdTitle Title { get; private set; }
         public ClassifiedAdText Text { get; private set; }
@@ -26,46 +21,30 @@ namespace Marketplace.Domain
         
         public UserId ApprovedBy { get; private set; }
 
-        public void SetTitle(ClassifiedAdTitle title)
-        {
-            Title = title;
-            EnsureValidState();
+        public void SetTitle(ClassifiedAdTitle title) =>
             Apply(new Events.ClassifiedAdTitleChanged
             {
                 Id = Id,
                 Title = title
             });
-        }
 
-        public void UpdateText(ClassifiedAdText text)
-        {
-            Text = text;
-            EnsureValidState();
+        public void UpdateText(ClassifiedAdText text) =>
             Apply(new Events.ClassifiedAdTextUpdated
             {
                 Id = Id,
                 Text = text
             });
-        }
 
-        public void UpdatePrice(Price price)
-        {
-            Price = price;
-            EnsureValidState();
+        public void UpdatePrice(Price price) =>
             Apply(new Events.ClassifiedAdPriceUpdated
             {
                 Id = Id,
-                Price = Price.Amount,
+                Price = price.Amount,
                 CurrencyCode = price.Currency.CurrencyCode
             });
-        }
 
-        public void RequestToPublish()
-        {
-            State = ClassifiedAdState.PendingReview;
-            EnsureValidState();
+        public void RequestToPublish() => 
             Apply(new Events.ClassifiedAdSentForReview {Id = Id});
-        }
 
         protected override void When(object @event)
         {
