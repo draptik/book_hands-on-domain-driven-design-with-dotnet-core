@@ -123,5 +123,8 @@ namespace Marketplace.Domain
             Inactive,
             MarkedAsSoled
         }
+
+        private Picture FindPicture(PictureId id)
+            => Pictures.FirstOrDefault(x => x.Id == id);
     }
 }

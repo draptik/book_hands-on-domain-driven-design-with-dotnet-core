@@ -43,5 +43,12 @@ namespace Marketplace.Domain
             public int Width { get; set; }
             public int Order { get; set; }
         }
+
+        public class ClassifiedAdPictureResized
+        {
+            public Guid PictureId { get; set; }
+            public int Width { get; set; }
+            public int Height { get; set; }
+        }
     }
 }
