@@ -59,6 +59,15 @@ namespace Marketplace.Domain
                 Width = size.Width,
                 Order = Pictures.Max(x => x.Order)
             });
+
+        public void ResizePicture(PictureId pictureId, PictureSize newSize)
+        {
+            var picture = FindPicture(pictureId);
+            if (picture == null)
+                throw new InvalidOperationException(
+                    "Cannot resize a picture that I don't have");
+            picture.Resize(newSize);
+        }
         
         public void RequestToPublish() => 
             Apply(new Events.ClassifiedAdSentForReview {Id = Id});
