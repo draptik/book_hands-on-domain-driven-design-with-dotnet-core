@@ -7,6 +7,8 @@ namespace Marketplace.Domain
 {
     public class ClassifiedAd : AggregateRoot<ClassifiedAdId>
     {
+        private Picture FirstPicture => Pictures.OrderBy(x => x.Order).FirstOrDefault();
+        
         public ClassifiedAdId Id { get; private set; }
 
         public ClassifiedAd(ClassifiedAdId id, UserId ownerId) =>
@@ -24,7 +26,7 @@ namespace Marketplace.Domain
         
         public UserId ApprovedBy { get; private set; }
 
-        public List<Picture> Pictures { get; private set; }
+        public List<Picture> Pictures { get; private set; } = new List<Picture>();
         
         
         public void SetTitle(ClassifiedAdTitle title) =>
@@ -111,11 +113,13 @@ namespace Marketplace.Domain
                     ClassifiedAdState.PendingReview =>
                         Title != null
                         && Text != null
-                        && Price?.Amount > 0,
+                        && Price?.Amount > 0
+                        && FirstPicture.HasCorrectSize(),
                     ClassifiedAdState.Active =>
                         Title != null
                         && Text != null
                         && Price?.Amount > 0
+                        && FirstPicture.HasCorrectSize()
                         && ApprovedBy != null,
                     _ => true
                 });
