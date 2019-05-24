@@ -11,12 +11,15 @@ namespace Marketplace.Domain
         
         public ClassifiedAdId Id { get; private set; }
 
-        public ClassifiedAd(ClassifiedAdId id, UserId ownerId) =>
+        public ClassifiedAd(ClassifiedAdId id, UserId ownerId)
+        {
+            Pictures = new List<Picture>();
             Apply(new Events.ClassifiedAdCreated
             {
                 Id = id,
                 OwnerId = ownerId
             });
+        }
 
         public UserId OwnerId { get; private set; }
         public ClassifiedAdTitle Title { get; private set; }
@@ -26,7 +29,7 @@ namespace Marketplace.Domain
         
         public UserId ApprovedBy { get; private set; }
 
-        public List<Picture> Pictures { get; private set; } = new List<Picture>();
+        public List<Picture> Pictures { get; private set; }
         
         
         public void SetTitle(ClassifiedAdTitle title) =>
@@ -59,7 +62,7 @@ namespace Marketplace.Domain
                 Url = pictureUrl.ToString(),
                 Height = size.Height,
                 Width = size.Width,
-                Order = Pictures.Max(x => x.Order)
+                Order = NewPictureOrder()
             });
 
         public void ResizePicture(PictureId pictureId, PictureSize newSize)
@@ -139,5 +142,10 @@ namespace Marketplace.Domain
 
         private Picture FindPicture(PictureId id)
             => Pictures.FirstOrDefault(x => x.Id == id);
+        
+        private int NewPictureOrder()
+            => Pictures.Any()
+                ? Pictures.Max(x => x.Order) + 1
+                : 0;
     }
 }
