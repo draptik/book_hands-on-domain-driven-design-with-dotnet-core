@@ -36,7 +36,7 @@ namespace Marketplace
                 Database = "Marketplace_Chapter8",
                 Conventions =
                 {
-                    FindIdentityProperty = m => m.Name == "_databaseId"
+                    FindIdentityProperty = m => m.Name == "DbId"
                 }
             };
             store.Initialize();
