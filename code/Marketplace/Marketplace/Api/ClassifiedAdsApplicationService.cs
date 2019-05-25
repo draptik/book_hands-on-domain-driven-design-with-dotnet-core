@@ -9,13 +9,16 @@ namespace Marketplace.Api
     public class ClassifiedAdsApplicationService : IApplicationService
     {
         private readonly IClassifiedAdRepository _repository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrencyLookup _currencyLookup;
 
         public ClassifiedAdsApplicationService(
             IClassifiedAdRepository repository,
+            IUnitOfWork unitOfWork,
             ICurrencyLookup currencyLookup)
         {
             _repository = repository;
+            _unitOfWork = unitOfWork;
             _currencyLookup = currencyLookup;
         }
 
@@ -53,8 +56,8 @@ namespace Marketplace.Api
                 new UserId(cmd.OwnerId)
             );
 
-            // TODO
-//            await _repository.Save(classifiedAd);
+            await _repository.Add(classifiedAd);
+            await _unitOfWork.Commit();
         }
         
         private async Task HandleUpdate(Guid classifiedAdId, Action<ClassifiedAd> operation)
@@ -67,8 +70,7 @@ namespace Marketplace.Api
 
             operation(classifiedAd);
 
-            // TODO
-//            await _repository.Save(classifiedAd);
+            await _unitOfWork.Commit();
         }
     }
 }
