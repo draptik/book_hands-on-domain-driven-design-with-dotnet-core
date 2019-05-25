@@ -1,6 +1,8 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using static Marketplace.Contracts.ClassifiedAds;
+using Serilog;
 
 namespace Marketplace.Api
 {
@@ -49,6 +51,21 @@ namespace Marketplace.Api
         {
             await _applicationService.Handle(request);
             return Ok();
+        }
+
+        private async Task<IActionResult> HandleRequest<T>(T request, Func<T, Task> handler)
+        {
+            try
+            {
+                Log.Debug("Handling HTTP request of type{type}", typeof(T).Name);
+                await handler(request);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                Log.Error("Error handling the request", e);
+                return new BadRequestObjectResult(new {error = e.Message, stackTrace = e.StackTrace});
+            }
         }
     }
 }
