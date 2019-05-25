@@ -53,7 +53,8 @@ namespace Marketplace.Api
                 new UserId(cmd.OwnerId)
             );
 
-            await _repository.Save(classifiedAd);
+            // TODO
+//            await _repository.Save(classifiedAd);
         }
         
         private async Task HandleUpdate(Guid classifiedAdId, Action<ClassifiedAd> operation)
@@ -66,7 +67,8 @@ namespace Marketplace.Api
 
             operation(classifiedAd);
 
-            await _repository.Save(classifiedAd);
+            // TODO
+//            await _repository.Save(classifiedAd);
         }
     }
 }
