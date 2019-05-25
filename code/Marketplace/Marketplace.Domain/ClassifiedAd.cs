@@ -103,6 +103,10 @@ namespace Marketplace.Domain
                     ApplyToEntity(picture, e);
                     Pictures.Add(picture);
                     break;
+                case Events.ClassifiedAdPictureResized e:
+                    picture = FindPicture(new PictureId(e.PictureId));
+                    ApplyToEntity(picture, @event);
+                    break;
             }
         }
 
