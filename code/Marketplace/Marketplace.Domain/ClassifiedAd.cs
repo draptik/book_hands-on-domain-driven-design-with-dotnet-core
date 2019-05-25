@@ -8,8 +8,6 @@ namespace Marketplace.Domain
     public class ClassifiedAd : AggregateRoot<ClassifiedAdId>
     {
         private Picture FirstPicture => Pictures.OrderBy(x => x.Order).FirstOrDefault();
-        
-        public ClassifiedAdId Id { get; private set; }
 
         public ClassifiedAd(ClassifiedAdId id, UserId ownerId)
         {
