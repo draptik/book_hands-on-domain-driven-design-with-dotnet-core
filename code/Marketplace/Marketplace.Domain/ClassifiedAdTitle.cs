@@ -6,7 +6,11 @@ namespace Marketplace.Domain
 {
     public class ClassifiedAdTitle : Value<ClassifiedAdTitle>
     {
-        public static ClassifiedAdTitle FromString(string title) => new ClassifiedAdTitle(title);
+        public static ClassifiedAdTitle FromString(string title)
+        {
+            CheckValidity(title);
+            return new ClassifiedAdTitle(title);
+        }
 
         public static ClassifiedAdTitle FromHtml(string htmlTitle)
         {
@@ -16,23 +20,27 @@ namespace Marketplace.Domain
                 .Replace("<b>", "**")
                 .Replace("</b>", "**");
             
-            return new ClassifiedAdTitle(Regex.Replace(
-                supportedTagsReplaced, "<.*?>", string.Empty));
+            var value = new ClassifiedAdTitle(Regex.Replace(supportedTagsReplaced, "<.*?>", string.Empty));
+            
+            CheckValidity(value);
+            return new ClassifiedAdTitle(value);
         }
         
         private readonly string _value;
 
-        public ClassifiedAdTitle(string value)
+        // Satisfy the serialization requirements (i.e. RavenDb)
+        protected ClassifiedAdTitle() { }
+
+        internal ClassifiedAdTitle(string value) => _value = value;
+
+        public static implicit operator string(ClassifiedAdTitle self) => self._value;
+        
+        private static void CheckValidity(string value)
         {
             if (value.Length > 100)
-            {
                 throw new ArgumentOutOfRangeException(
-                    "Title cannot be longer than 100 characters", 
-                    nameof(value));
-            }
-            _value = value;
+                    nameof(value),
+                    "Title cannot be longer that 100 characters");
         }
-        
-        public static implicit operator string(ClassifiedAdTitle self) => self._value;
     }
 }
