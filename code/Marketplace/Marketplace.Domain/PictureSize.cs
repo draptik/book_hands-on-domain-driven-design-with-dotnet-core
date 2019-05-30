@@ -23,6 +23,7 @@ namespace Marketplace.Domain
             Height = height;
         }
 
+        // persistence
         internal PictureSize() { }
     }
 }

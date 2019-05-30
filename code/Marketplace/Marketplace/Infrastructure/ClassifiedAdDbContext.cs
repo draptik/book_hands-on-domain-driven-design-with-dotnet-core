@@ -10,11 +10,13 @@ namespace Marketplace.Infrastructure
     {
         private readonly ILoggerFactory _loggerFactory;
 
+        // ReSharper disable once SuggestBaseTypeForParameter
         public ClassifiedAdDbContext(
             DbContextOptions<ClassifiedAdDbContext> options,
             ILoggerFactory loggerFactory)
         : base(options) => _loggerFactory = loggerFactory;
 
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public DbSet<ClassifiedAd> ClassifiedAds { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -23,14 +25,36 @@ namespace Marketplace.Infrastructure
             optionsBuilder.EnableSensitiveDataLogging();
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder) 
-            => modelBuilder.ApplyConfiguration(new ClassifiedAdEntityTypeConfiguration());
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new ClassifiedAdEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new PictureEntityTypeConfiguration());
+        }
     }
 
     public class ClassifiedAdEntityTypeConfiguration : IEntityTypeConfiguration<ClassifiedAd>
     {
-        public void Configure(EntityTypeBuilder<ClassifiedAd> builder) 
-            => builder.HasKey(x => x.ClassifiedAdId);
+        public void Configure(EntityTypeBuilder<ClassifiedAd> builder)
+        {
+            builder.HasKey(x => x.ClassifiedAdId);
+            builder.OwnsOne(x => x.Id);
+            builder.OwnsOne(x => x.Price, p => p.OwnsOne(c => c.Currency));
+            builder.OwnsOne(x => x.Text);
+            builder.OwnsOne(x => x.Title);
+            builder.OwnsOne(x => x.ApprovedBy);
+            builder.OwnsOne(x => x.OwnerId);
+        }
+    }
+
+    public class PictureEntityTypeConfiguration : IEntityTypeConfiguration<Picture>
+    {
+        public void Configure(EntityTypeBuilder<Picture> builder)
+        {
+            builder.HasKey(x => x.PictureId);
+            builder.OwnsOne(x => x.Id);
+            builder.OwnsOne(x => x.ParentId);
+            builder.OwnsOne(x => x.Size);
+        }
     }
 
     public static class AppBuilderDatabaseExtensions
