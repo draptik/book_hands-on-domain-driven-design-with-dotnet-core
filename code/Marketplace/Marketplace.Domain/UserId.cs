@@ -15,5 +15,8 @@ namespace Marketplace.Domain
         }
         
         public static implicit operator Guid(UserId self) => self.Value;
+        
+        // required for ef-core persistence
+        protected UserId() {}
     }
 }

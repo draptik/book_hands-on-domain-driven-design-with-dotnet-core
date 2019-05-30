@@ -39,5 +39,14 @@ namespace Marketplace.Domain
         public Picture(Action<object> applier) : base(applier)
         {
         }
+        
+        // persistence EF-Core?
+        public Guid PictureId
+        {
+            get => Id.Value;
+            set {}
+        }
+        
+        protected Picture() {}
     }
 }

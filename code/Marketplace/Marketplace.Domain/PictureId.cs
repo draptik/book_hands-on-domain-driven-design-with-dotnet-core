@@ -8,5 +8,8 @@ namespace Marketplace.Domain
         public Guid Value { get; }
 
         public PictureId(Guid value) => Value = value;
+        
+        // required for ef-core persistence
+        protected PictureId() {}
     }
 }
