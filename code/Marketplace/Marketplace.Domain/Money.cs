@@ -31,6 +31,9 @@ namespace Marketplace.Domain
             Currency = currency;
         }
 
+        // Satisfy the serialization requirements (i.e. RavenDb)
+        protected Money() {}
+
         public decimal Amount { get; }
         public Currency Currency { get; }
 

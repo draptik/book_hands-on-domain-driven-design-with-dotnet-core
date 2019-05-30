@@ -13,8 +13,6 @@ namespace Marketplace.Domain
             get => $"ClassifiedAd/{Id.Value}";
             set {}
         }
-        
-        private Picture FirstPicture => Pictures.OrderBy(x => x.Order).FirstOrDefault();
 
         public ClassifiedAd(ClassifiedAdId id, UserId ownerId)
         {
@@ -148,6 +146,8 @@ namespace Marketplace.Domain
             Inactive,
             MarkedAsSoled
         }
+        
+        private Picture FirstPicture => Pictures.OrderBy(x => x.Order).FirstOrDefault();
 
         private Picture FindPicture(PictureId id)
             => Pictures.FirstOrDefault(x => x.Id == id);
@@ -156,5 +156,8 @@ namespace Marketplace.Domain
             => Pictures.Any()
                 ? Pictures.Max(x => x.Order) + 1
                 : 0;
+        
+        // For persistence
+        protected ClassifiedAd() { }
     }
 }

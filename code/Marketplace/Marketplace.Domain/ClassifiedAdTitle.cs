@@ -19,22 +19,20 @@ namespace Marketplace.Domain
                 .Replace("</i>", "*")
                 .Replace("<b>", "**")
                 .Replace("</b>", "**");
-            
-            var value = new ClassifiedAdTitle(Regex.Replace(supportedTagsReplaced, "<.*?>", string.Empty));
-            
+
+            var value = Regex.Replace(supportedTagsReplaced, "<.*?>", string.Empty);
             CheckValidity(value);
+
             return new ClassifiedAdTitle(value);
         }
-        
-        private readonly string _value;
 
-        // Satisfy the serialization requirements (i.e. RavenDb)
-        protected ClassifiedAdTitle() { }
+        public string Value { get; private set; }
 
-        internal ClassifiedAdTitle(string value) => _value = value;
+        internal ClassifiedAdTitle(string value) => Value = value;
 
-        public static implicit operator string(ClassifiedAdTitle self) => self._value;
-        
+        public static implicit operator string(ClassifiedAdTitle title) =>
+            title.Value;
+
         private static void CheckValidity(string value)
         {
             if (value.Length > 100)
@@ -42,5 +40,8 @@ namespace Marketplace.Domain
                     nameof(value),
                     "Title cannot be longer that 100 characters");
         }
+
+        // Satisfy the serialization requirements
+        protected ClassifiedAdTitle() { }
     }
 }
