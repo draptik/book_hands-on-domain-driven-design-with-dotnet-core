@@ -4,6 +4,7 @@ using Marketplace.Framework;
 using Marketplace.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Raven.Client.Documents;
@@ -24,23 +25,41 @@ namespace Marketplace
 
         public void ConfigureServices(IServiceCollection services)
         {
+            // RavenDb ======================================================
             // setup RavenDb
-            var store = new DocumentStore
-            {
-                Urls = new[] {"http://localhost:8080"},
-                Database = "Marketplace_Chapter8",
-                Conventions =
-                {
-                    FindIdentityProperty = m => m.Name == "DbId"
-                }
-            };
-            store.Initialize();
+//            var store = new DocumentStore
+//            {
+//                Urls = new[] {"http://localhost:8080"},
+//                Database = "Marketplace_Chapter8",
+//                Conventions =
+//                {
+//                    FindIdentityProperty = m => m.Name == "DbId"
+//                }
+//            };
+//            store.Initialize();
+//
+//            services.AddSingleton<ICurrencyLookup, FixedCurrencyLookup>();
+//            services.AddScoped(c => store.OpenAsyncSession());
+//            services.AddScoped<IUnitOfWork, RavenDbUnitOfWork>();
+//            services.AddScoped<IClassifiedAdRepository, ClassifiedAdRepository>();
+//            services.AddScoped<ClassifiedAdsApplicationService>();
+            // End RavenDb ==================================================
+            
+            
+            
+            // EF-Core ======================================================
+            const string connectionString = "Host=localhost;Database=Marketplace_Chapter8;Username=ddd;Password=book";
+            services
+                .AddEntityFrameworkNpgsql()
+                .AddDbContext<ClassifiedAdDbContext>(
+                    options => options.UseNpgsql(connectionString));
 
             services.AddSingleton<ICurrencyLookup, FixedCurrencyLookup>();
-            services.AddScoped(c => store.OpenAsyncSession());
-            services.AddScoped<IUnitOfWork, RavenDbUnitOfWork>();
+            services.AddScoped<IUnitOfWork, EfCoreUnitOfWork>();
             services.AddScoped<IClassifiedAdRepository, ClassifiedAdRepository>();
             services.AddScoped<ClassifiedAdsApplicationService>();
+            // End EF-Core ==================================================
+            
             
             services.AddMvc();
             services.AddSwaggerGen(c =>
@@ -59,6 +78,8 @@ namespace Marketplace
                 app.UseDeveloperExceptionPage();
             }
 
+            app.EnsureDatabase(); // <- only for EF-Core!!
+            
             app.UseMvcWithDefaultRoute();
             app.UseSwagger();
             app.UseSwaggerUI(c =>
