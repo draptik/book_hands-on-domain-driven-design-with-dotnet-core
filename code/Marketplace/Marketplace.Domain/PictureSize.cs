@@ -1,8 +1,9 @@
 using System;
+using Marketplace.Framework;
 
 namespace Marketplace.Domain
 {
-    public class PictureSize
+    public class PictureSize : Value<PictureSize>
     {
         public int Width { get; internal set; }
         public int Height { get; internal set; }
@@ -17,7 +18,7 @@ namespace Marketplace.Domain
                 throw new ArgumentOutOfRangeException(
                     nameof(height),
                     "Picture height must be a positive number");
-            
+
             Width = width;
             Height = height;
         }
