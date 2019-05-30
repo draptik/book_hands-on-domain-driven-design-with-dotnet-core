@@ -94,5 +94,15 @@ namespace Marketplace.Tests
             
             Assert.Equal(Money.FromDecimal(2, "USD", CurrencyLookup), money1 + money2);
         }
+
+        [Fact]
+        public void New_price_has_correct_amount_and_currency()
+        {
+            var result = Price.FromDecimal(5, "EUR", CurrencyLookup);
+            
+            Assert.Equal(5, result.Amount);
+            var expectedCurrency = new Currency{CurrencyCode = "EUR", DecimalPlaces = 2, InUse = true};
+            Assert.Equal(expectedCurrency, result.Currency);
+        }
     }
 }
