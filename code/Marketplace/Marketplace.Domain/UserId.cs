@@ -18,5 +18,8 @@ namespace Marketplace.Domain
         
         // required for ef-core persistence
         protected UserId() {}
+        
+        public static UserId NoUser =>
+            new UserId();
     }
 }

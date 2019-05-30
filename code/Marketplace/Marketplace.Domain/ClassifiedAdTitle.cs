@@ -43,5 +43,9 @@ namespace Marketplace.Domain
 
         // Satisfy the serialization requirements
         protected ClassifiedAdTitle() { }
+
+        // optional
+        public static ClassifiedAdTitle NoTitle =
+            new ClassifiedAdTitle();
     }
 }

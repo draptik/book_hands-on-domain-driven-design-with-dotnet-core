@@ -34,8 +34,8 @@ namespace Marketplace.Domain
         // Satisfy the serialization requirements (i.e. RavenDb)
         protected Money() {}
 
-        public decimal Amount { get; }
-        public Currency Currency { get; }
+        public decimal Amount { get; internal set; } // internal setter for ef-persistence
+        public Currency Currency { get; internal set; } // internal setter for ef-persistence
 
         public static Money FromDecimal(decimal amount, string currency, ICurrencyLookup currencyLookup) 
             => new Money(amount, currency, currencyLookup);

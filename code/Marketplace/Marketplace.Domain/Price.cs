@@ -24,5 +24,12 @@ namespace Marketplace.Domain
         
         // Satisfy the serialization requirements 
         protected Price() { }
+        
+        public static Price NoPrice =>
+            new Price
+            {
+                Amount = -1, 
+                Currency = Currency.None
+            };
     }
 }

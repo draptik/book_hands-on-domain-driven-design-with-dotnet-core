@@ -16,5 +16,8 @@ namespace Marketplace.Domain
 
         // Satisfy the serialization requirements
         protected ClassifiedAdText() { }
+        
+        public static ClassifiedAdText NoText =>
+            new ClassifiedAdText();
     }
 }

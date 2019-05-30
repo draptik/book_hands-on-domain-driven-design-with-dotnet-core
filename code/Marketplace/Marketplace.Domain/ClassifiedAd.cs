@@ -95,6 +95,13 @@ namespace Marketplace.Domain
                     Id = new ClassifiedAdId(e.Id);
                     OwnerId = new UserId(e.OwnerId);
                     State = ClassifiedAdState.Inactive;
+
+                    // optional properties
+                    Title = ClassifiedAdTitle.NoTitle;
+                    Text = ClassifiedAdText.NoText;
+                    Price = Price.NoPrice;
+                    ApprovedBy = UserId.NoUser;
+                    
                     // required for persistence (EF)
                     ClassifiedAdId = e.Id;
                     break;
