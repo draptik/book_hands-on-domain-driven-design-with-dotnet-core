@@ -2,17 +2,17 @@ version: '3.5'
 
 services:
 
-  # ravendb:
-  #   container_name: marketplace-ch8-ravendb
-  #   image: ravendb/ravendb
-  #   ports:
-  #     - 8080:8080
-  #   environment:
-  #     - RAVEN_Security_UnsecuredAccessAllowed=PublicNetwork
-  #     - RAVEN_ARGS="--Setup.Mode=None"
+  ravendb:
+    container_name: marketplace-ch9-ravendb
+    image: ravendb/ravendb
+    ports:
+      - 8080:8080
+    environment:
+      - RAVEN_Security_UnsecuredAccessAllowed=PublicNetwork
+      - RAVEN_ARGS="--Setup.Mode=None"
 
   postgres:
-    container_name: marketplace-ch8-postgres
+    container_name: marketplace-ch9-postgres
     image: postgres
     ports:
       - 5432:5432
