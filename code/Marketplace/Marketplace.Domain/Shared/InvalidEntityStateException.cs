@@ -1,6 +1,6 @@
 using System;
 
-namespace Marketplace.Domain
+namespace Marketplace.Domain.Shared
 {
     public class InvalidEntityStateException : Exception
     {

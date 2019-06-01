@@ -1,4 +1,4 @@
-namespace Marketplace.Domain
+namespace Marketplace.Domain.Shared
 {
     public interface ICurrencyLookup
     {

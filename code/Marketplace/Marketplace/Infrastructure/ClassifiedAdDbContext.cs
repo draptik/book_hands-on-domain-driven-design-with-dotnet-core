@@ -1,4 +1,5 @@
 using Marketplace.Domain;
+using Marketplace.Domain.ClassifiedAd;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

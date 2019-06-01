@@ -1,5 +1,7 @@
 using System;
 using Marketplace.Domain;
+using Marketplace.Domain.ClassifiedAd;
+using Marketplace.Domain.Shared;
 using Xunit;
 
 namespace Marketplace.Tests

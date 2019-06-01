@@ -1,6 +1,6 @@
 using Marketplace.Framework;
 
-namespace Marketplace.Domain
+namespace Marketplace.Domain.Shared
 {
     public class Currency : Value<Currency>
     {
