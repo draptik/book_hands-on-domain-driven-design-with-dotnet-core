@@ -1,10 +1,9 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using static Marketplace.Contracts.ClassifiedAds;
 using Serilog;
 
-namespace Marketplace.Api
+namespace Marketplace.ClassifiedAd
 {
     [Route("/ad")]
     public class ClassifiedAdsCommandsApi : Controller
@@ -16,27 +15,27 @@ namespace Marketplace.Api
             => _applicationService = applicationService;
 
         [HttpPost]
-        public Task<IActionResult> Post(V1.Create request)
+        public Task<IActionResult> Post(Contracts.V1.Create request)
             => HandleRequest(request, _applicationService.Handle);
         
         [Route("name")]
         [HttpPut]
-        public Task<IActionResult> Put(V1.SetTitle request)
+        public Task<IActionResult> Put(Contracts.V1.SetTitle request)
             => HandleRequest(request, _applicationService.Handle);
         
         [Route("text")]
         [HttpPut]
-        public Task<IActionResult> Put(V1.UpdateText request)
+        public Task<IActionResult> Put(Contracts.V1.UpdateText request)
             => HandleRequest(request, _applicationService.Handle);
 
         [Route("price")]
         [HttpPut]
-        public Task<IActionResult> Put(V1.UpdatePrice request)
+        public Task<IActionResult> Put(Contracts.V1.UpdatePrice request)
             => HandleRequest(request, _applicationService.Handle);
 
         [Route("publish")]
         [HttpPut]
-        public Task<IActionResult> Put(V1.RequestToPublish request)
+        public Task<IActionResult> Put(Contracts.V1.RequestToPublish request)
             => HandleRequest(request, _applicationService.Handle);
 
         private async Task<IActionResult> HandleRequest<T>(T request, Func<T, Task> handler)

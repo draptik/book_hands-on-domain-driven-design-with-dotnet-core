@@ -1,5 +1,4 @@
-﻿using Marketplace.Api;
-using Marketplace.Domain;
+﻿using Marketplace.ClassifiedAd;
 using Marketplace.Domain.ClassifiedAd;
 using Marketplace.Domain.Shared;
 using Marketplace.Framework;
@@ -9,7 +8,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Raven.Client.Documents;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace Marketplace

@@ -1,10 +1,8 @@
-using System;
 using System.Threading.Tasks;
-using Marketplace.Domain;
 using Marketplace.Domain.ClassifiedAd;
-using Raven.Client.Documents.Session;
+using Marketplace.Infrastructure;
 
-namespace Marketplace.Infrastructure
+namespace Marketplace.ClassifiedAd
 {
     // RavenDb Repository
 //    public class ClassifiedAdRepository : IClassifiedAdRepository, IDisposable
@@ -40,10 +38,10 @@ namespace Marketplace.Infrastructure
         public async Task<bool> Exists(ClassifiedAdId id) 
             => await _dbContext.ClassifiedAds.FindAsync(id.Value) != null;
 
-        public Task<ClassifiedAd> Load(ClassifiedAdId id) 
+        public Task<Domain.ClassifiedAd.ClassifiedAd> Load(ClassifiedAdId id) 
             => _dbContext.ClassifiedAds.FindAsync(id.Value);
 
-        public Task Add(ClassifiedAd entity) 
+        public Task Add(Domain.ClassifiedAd.ClassifiedAd entity) 
             => _dbContext.ClassifiedAds.AddAsync(entity);
     }
 }

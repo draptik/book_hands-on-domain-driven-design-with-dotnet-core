@@ -1,12 +1,10 @@
 using System;
 using System.Threading.Tasks;
-using Marketplace.Domain;
 using Marketplace.Domain.ClassifiedAd;
 using Marketplace.Domain.Shared;
 using Marketplace.Framework;
-using static Marketplace.Contracts.ClassifiedAds;
 
-namespace Marketplace.Api
+namespace Marketplace.ClassifiedAd
 {
     public class ClassifiedAdsApplicationService : IApplicationService
     {
@@ -27,33 +25,33 @@ namespace Marketplace.Api
         public Task Handle(object command) =>
             command switch
             {
-                V1.Create cmd 
+                Contracts.V1.Create cmd 
                     => HandleCreate(cmd),
-                V1.SetTitle cmd 
+                Contracts.V1.SetTitle cmd 
                     => HandleUpdate(
                         cmd.Id,
                         c => c.SetTitle(ClassifiedAdTitle.FromString(cmd.Title))),
-                V1.UpdateText cmd 
+                Contracts.V1.UpdateText cmd 
                     => HandleUpdate(
                         cmd.Id,
                         c => c.UpdateText(ClassifiedAdText.FromString(cmd.Text))),
-                V1.UpdatePrice cmd 
+                Contracts.V1.UpdatePrice cmd 
                     => HandleUpdate(
                         cmd.Id,
                         c => c.UpdatePrice(
                             Price.FromDecimal(cmd.Price, cmd.Currency, _currencyLookup))),
-                V1.RequestToPublish cmd 
+                Contracts.V1.RequestToPublish cmd 
                     => HandleUpdate(cmd.Id,
                         c => c.RequestToPublish()),
                 _ => Task.CompletedTask
             };
 
-        private async Task HandleCreate(V1.Create cmd)
+        private async Task HandleCreate(Contracts.V1.Create cmd)
         {
             if (await _repository.Exists(cmd.Id.ToString()))
                 throw new InvalidOperationException($"Entity with id {cmd.Id} already exists");
 
-            var classifiedAd = new ClassifiedAd(
+            var classifiedAd = new Domain.ClassifiedAd.ClassifiedAd(
                 new ClassifiedAdId(cmd.Id),
                 new UserId(cmd.OwnerId)
             );
@@ -62,7 +60,7 @@ namespace Marketplace.Api
             await _unitOfWork.Commit();
         }
         
-        private async Task HandleUpdate(Guid classifiedAdId, Action<ClassifiedAd> operation)
+        private async Task HandleUpdate(Guid classifiedAdId, Action<Domain.ClassifiedAd.ClassifiedAd> operation)
         {
             var classifiedAd = await _repository.Load(classifiedAdId.ToString());
             
