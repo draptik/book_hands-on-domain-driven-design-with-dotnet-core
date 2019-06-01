@@ -9,8 +9,4 @@
       <ProjectReference Include="..\Marketplace.Framework\Marketplace.Framework.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="UserProfile" />
-    </ItemGroup>
-
 </Project>

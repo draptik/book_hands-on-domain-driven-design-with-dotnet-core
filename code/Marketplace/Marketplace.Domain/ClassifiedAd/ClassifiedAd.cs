@@ -152,7 +152,7 @@ namespace Marketplace.Domain.ClassifiedAd
                 });
 
             if (!valid)
-                throw new InvalidEntityStateException(
+                throw new DomainExceptions.InvalidEntityStateException(
                     this, $"Post-checks failed in state {State}");
         }
         

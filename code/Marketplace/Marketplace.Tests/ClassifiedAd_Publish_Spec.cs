@@ -1,5 +1,4 @@
 using System;
-using Marketplace.Domain;
 using Marketplace.Domain.ClassifiedAd;
 using Marketplace.Domain.Shared;
 using Xunit;
@@ -30,40 +29,40 @@ namespace Marketplace.Tests
         }
         
         [Fact]
-        public void Cannot_publish_a_without_title()
+        public void Cannot_publish_ad_without_title()
         {
             _classifiedAd.UpdateText(ClassifiedAdText.FromString("Please buy my stuff"));
             _classifiedAd.UpdatePrice(Price.FromDecimal(100.10m, "EUR", new FakeCurrencyLookup()));
 
-            Assert.Throws<InvalidEntityStateException>(() => _classifiedAd.RequestToPublish());
+            Assert.Throws<DomainExceptions.InvalidEntityStateException>(() => _classifiedAd.RequestToPublish());
         }
 
         [Fact]
-        public void Cannot_publish_a_without_text()
+        public void Cannot_publish_ad_without_text()
         {
             _classifiedAd.SetTitle(ClassifiedAdTitle.FromString("Test ad"));
             _classifiedAd.UpdatePrice(Price.FromDecimal(100.10m, "EUR", new FakeCurrencyLookup()));
 
-            Assert.Throws<InvalidEntityStateException>(() => _classifiedAd.RequestToPublish());
+            Assert.Throws<DomainExceptions.InvalidEntityStateException>(() => _classifiedAd.RequestToPublish());
         }
 
         [Fact]
-        public void Cannot_publish_a_without_price()
+        public void Cannot_publish_ad_without_price()
         {
             _classifiedAd.SetTitle(ClassifiedAdTitle.FromString("Test ad"));
             _classifiedAd.UpdateText(ClassifiedAdText.FromString("Please buy my stuff"));
 
-            Assert.Throws<InvalidEntityStateException>(() => _classifiedAd.RequestToPublish());
+            Assert.Throws<DomainExceptions.InvalidEntityStateException>(() => _classifiedAd.RequestToPublish());
         }
 
         [Fact]
-        public void Cannot_publish_a_with_zero_price()
+        public void Cannot_publish_ad_with_zero_price()
         {
             _classifiedAd.SetTitle(ClassifiedAdTitle.FromString("Test ad"));
             _classifiedAd.UpdateText(ClassifiedAdText.FromString("Please buy my stuff"));
             _classifiedAd.UpdatePrice(Price.FromDecimal(0.0m, "EUR", new FakeCurrencyLookup()));
                 
-            Assert.Throws<InvalidEntityStateException>(() => _classifiedAd.RequestToPublish());
+            Assert.Throws<DomainExceptions.InvalidEntityStateException>(() => _classifiedAd.RequestToPublish());
         }
     }
 }
