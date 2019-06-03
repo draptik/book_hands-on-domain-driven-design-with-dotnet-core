@@ -8,12 +8,14 @@ namespace Marketplace.Tests
     public class ClassifiedAd_Publish_Spec
     {
         private readonly ClassifiedAd _classifiedAd;
+        private readonly Guid _adId = Guid.NewGuid();
+        private readonly Guid _userId = Guid.NewGuid();
 
         public ClassifiedAd_Publish_Spec()
         {
             _classifiedAd = new ClassifiedAd(
-                new ClassifiedAdId(Guid.NewGuid()), 
-                new UserId(Guid.NewGuid()));
+                new ClassifiedAdId(_adId), 
+                new UserId(_userId));
         }
 
         [Fact]
@@ -33,7 +35,7 @@ namespace Marketplace.Tests
         {
             _classifiedAd.UpdateText(ClassifiedAdText.FromString("Please buy my stuff"));
             _classifiedAd.UpdatePrice(Price.FromDecimal(100.10m, "EUR", new FakeCurrencyLookup()));
-
+            
             Assert.Throws<DomainExceptions.InvalidEntityStateException>(() => _classifiedAd.RequestToPublish());
         }
 

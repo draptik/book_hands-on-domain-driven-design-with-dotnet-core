@@ -88,6 +88,9 @@ namespace Marketplace.Domain.ClassifiedAd
         public void RequestToPublish() => 
             Apply(new Events.ClassifiedAdSentForReview {Id = Id});
 
+        public void Publish(UserId userId) =>
+            Apply(new Events.ClassifiedAdPublished {Id = Id, ApprovedBy = userId});
+
         protected override void When(object @event)
         {
             switch (@event)
@@ -98,13 +101,13 @@ namespace Marketplace.Domain.ClassifiedAd
                     State = ClassifiedAdState.Inactive;
 
                     // optional properties
-                    Title = ClassifiedAdTitle.NoTitle;
-                    Text = ClassifiedAdText.NoText;
-                    Price = Price.NoPrice;
-                    ApprovedBy = UserId.NoUser;
-                    
-                    // required for persistence (EF)
-                    ClassifiedAdId = e.Id;
+//                    Title = ClassifiedAdTitle.NoTitle; // EF-only!
+//                    Text = ClassifiedAdText.NoText; // EF-only!
+//                    Price = Price.NoPrice; // EF-only!
+//                    ApprovedBy = UserId.NoUser; // EF-only!
+//                    
+//                    // required for persistence (EF)
+//                    ClassifiedAdId = e.Id; // EF-only!
                     break;
                 case Events.ClassifiedAdTitleChanged e:
                     Title = new ClassifiedAdTitle(e.Title);
@@ -115,8 +118,12 @@ namespace Marketplace.Domain.ClassifiedAd
                 case Events.ClassifiedAdPriceUpdated e:
                     Price = new Price(e.Price, e.CurrencyCode);
                     break;
-                case Events.ClassifiedAdSentForReview e:
+                case Events.ClassifiedAdSentForReview _:
                     State = ClassifiedAdState.PendingReview;
+                    break;
+                case Events.ClassifiedAdPublished e:
+                    ApprovedBy = new UserId(e.ApprovedBy);
+                    State = ClassifiedAdState.Active;
                     break;
                 case Events.PictureAddedToClassifiedAd e:
                     var picture = new Picture(Apply);
@@ -140,13 +147,11 @@ namespace Marketplace.Domain.ClassifiedAd
                     ClassifiedAdState.PendingReview =>
                         Title != null
                         && Text != null
-                        && Price?.Amount > 0
-                        && FirstPicture.HasCorrectSize(),
+                        && Price?.Amount > 0,
                     ClassifiedAdState.Active =>
                         Title != null
                         && Text != null
                         && Price?.Amount > 0
-                        && FirstPicture.HasCorrectSize()
                         && ApprovedBy != null,
                     _ => true
                 });
@@ -161,7 +166,7 @@ namespace Marketplace.Domain.ClassifiedAd
             PendingReview,
             Active,
             Inactive,
-            MarkedAsSoled
+            MarkedAsSold
         }
         
         private Picture FirstPicture => Pictures.OrderBy(x => x.Order).FirstOrDefault();
