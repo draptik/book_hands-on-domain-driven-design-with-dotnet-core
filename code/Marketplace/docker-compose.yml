@@ -11,10 +11,10 @@ services:
       - RAVEN_Security_UnsecuredAccessAllowed=PublicNetwork
       - RAVEN_ARGS="--Setup.Mode=None"
 
-  postgres:
-    container_name: marketplace-ch9-postgres
-    image: postgres
-    ports:
-      - 5432:5432
-    volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+  # postgres:
+  #   container_name: marketplace-ch9-postgres
+  #   image: postgres
+  #   ports:
+  #     - 5432:5432
+  #   volumes:
+  #     - ./init.sql:/docker-entrypoint-initdb.d/init.sql
