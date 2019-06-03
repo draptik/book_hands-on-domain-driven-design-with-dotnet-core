@@ -2,7 +2,7 @@ using System;
 
 namespace Marketplace.ClassifiedAd
 {
-    public static class Contracts
+    public static class Commands
     {
         public static class V1
         {
@@ -34,6 +34,12 @@ namespace Marketplace.ClassifiedAd
             public class RequestToPublish
             {
                 public Guid Id { get; set; }
+            }
+            
+            public class Publish
+            {
+                public Guid Id { get; set; }
+                public Guid ApprovedBy { get; set; }
             }
         }
     }

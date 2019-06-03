@@ -25,28 +25,33 @@ namespace Marketplace.ClassifiedAd
         public Task Handle(object command) =>
             command switch
             {
-                Contracts.V1.Create cmd 
+                Commands.V1.Create cmd 
                     => HandleCreate(cmd),
-                Contracts.V1.SetTitle cmd 
+                Commands.V1.SetTitle cmd 
                     => HandleUpdate(
                         cmd.Id,
                         c => c.SetTitle(ClassifiedAdTitle.FromString(cmd.Title))),
-                Contracts.V1.UpdateText cmd 
+                Commands.V1.UpdateText cmd 
                     => HandleUpdate(
                         cmd.Id,
                         c => c.UpdateText(ClassifiedAdText.FromString(cmd.Text))),
-                Contracts.V1.UpdatePrice cmd 
+                Commands.V1.UpdatePrice cmd 
                     => HandleUpdate(
                         cmd.Id,
                         c => c.UpdatePrice(
                             Price.FromDecimal(cmd.Price, cmd.Currency, _currencyLookup))),
-                Contracts.V1.RequestToPublish cmd 
+                Commands.V1.RequestToPublish cmd 
                     => HandleUpdate(cmd.Id,
                         c => c.RequestToPublish()),
+                Commands.V1.Publish cmd
+                    => HandleUpdate(
+                        cmd.Id,
+                        c => c.Publish(
+                            new UserId(cmd.ApprovedBy))),
                 _ => Task.CompletedTask
             };
 
-        private async Task HandleCreate(Contracts.V1.Create cmd)
+        private async Task HandleCreate(Commands.V1.Create cmd)
         {
             if (await _repository.Exists(cmd.Id.ToString()))
                 throw new InvalidOperationException($"Entity with id {cmd.Id} already exists");
@@ -60,7 +65,8 @@ namespace Marketplace.ClassifiedAd
             await _unitOfWork.Commit();
         }
         
-        private async Task HandleUpdate(Guid classifiedAdId, Action<Domain.ClassifiedAd.ClassifiedAd> operation)
+        private async Task HandleUpdate(Guid classifiedAdId, 
+            Action<Domain.ClassifiedAd.ClassifiedAd> operation)
         {
             var classifiedAd = await _repository.Load(classifiedAdId.ToString());
             
