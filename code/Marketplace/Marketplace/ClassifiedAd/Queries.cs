@@ -67,6 +67,14 @@ namespace Marketplace.ClassifiedAd
                     SellersDisplayName = user.DisplayName.Value
                 }).SingleAsync();
 
+        /// <summary>
+        /// Paged list of all published ads
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="page">zero-based (!) page</param>
+        /// <param name="pageSize">max number of entries to return</param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         private static Task<List<T>> PagedList<T>(
             this IRavenQueryable<T> query, int page, int pageSize)
             =>

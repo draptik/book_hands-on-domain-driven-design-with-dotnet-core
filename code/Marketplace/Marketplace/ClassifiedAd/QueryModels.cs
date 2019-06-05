@@ -6,6 +6,9 @@ namespace Marketplace.ClassifiedAd
     {
         public class GetPublishedClassifiedAds
         {
+            /// <summary>
+            /// Page number: zero-based
+            /// </summary>
             public int Page { get; set; }
             public int PageSize { get; set; }
         }
@@ -13,6 +16,10 @@ namespace Marketplace.ClassifiedAd
         public class GetOwnersClassifiedAd
         {
             public Guid OwnerId { get; set; }
+            
+            /// <summary>
+            /// Page number: zero-based
+            /// </summary>
             public int Page { get; set; }
             public int PageSize { get; set; }
         }
