@@ -62,7 +62,9 @@ namespace Marketplace.Domain.ClassifiedAd
             {
                 Id = Id,
                 Price = price.Amount,
-                CurrencyCode = price.Currency.CurrencyCode
+                CurrencyCode = price.Currency.CurrencyCode,
+                InUse = price.Currency.InUse,
+                DecimalPlaces = price.Currency.DecimalPlaces
             });
 
         public void AddPicture(Uri pictureUrl, PictureSize size)
@@ -116,7 +118,7 @@ namespace Marketplace.Domain.ClassifiedAd
                     Text = new ClassifiedAdText(e.Text);
                     break;
                 case Events.ClassifiedAdPriceUpdated e:
-                    Price = new Price(e.Price, e.CurrencyCode);
+                    Price = new Price(e.Price, e.CurrencyCode, e.InUse, e.DecimalPlaces);
                     break;
                 case Events.ClassifiedAdSentForReview _:
                     State = ClassifiedAdState.PendingReview;

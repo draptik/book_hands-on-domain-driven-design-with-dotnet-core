@@ -27,6 +27,8 @@ namespace Marketplace.Domain.ClassifiedAd
             public Guid Id { get; set; }
             public decimal Price { get; set; }
             public string CurrencyCode { get; set; }
+            public bool InUse { get; set; }
+            public int DecimalPlaces { get; set; }
         }
 
         public class ClassifiedAdSentForReview

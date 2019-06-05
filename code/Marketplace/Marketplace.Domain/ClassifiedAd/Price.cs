@@ -19,6 +19,11 @@ namespace Marketplace.Domain.ClassifiedAd
         {
         }
 
+        internal Price(decimal amount, string currencyCode, bool inUse, int decimalPlaces)
+            : base(amount, new Currency{CurrencyCode = currencyCode, InUse = inUse, DecimalPlaces = decimalPlaces})
+        {
+        }
+
         public new static Price FromDecimal(decimal amount, string currency,
             ICurrencyLookup currencyLookup) =>
             new Price(amount, currency, currencyLookup);
