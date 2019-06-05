@@ -6,7 +6,7 @@ namespace Marketplace.Domain.UserProfile
 {
     public class DisplayName : Value<DisplayName>
     {
-        public string Value { get; }
+        public string Value { get; private set; } // private set required for RavenDb
 
         public DisplayName(string displayName) => Value = displayName;
 
