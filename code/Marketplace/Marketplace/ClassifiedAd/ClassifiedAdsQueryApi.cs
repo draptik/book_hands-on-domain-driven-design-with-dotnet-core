@@ -12,6 +12,7 @@ namespace Marketplace.ClassifiedAd
     {
         private static readonly ILogger Log = Serilog.Log.ForContext<ClassifiedAdsQueryApi>();
         
+        // RavenDb session
         private readonly IAsyncDocumentSession _session;
         
         public ClassifiedAdsQueryApi(IAsyncDocumentSession session)
