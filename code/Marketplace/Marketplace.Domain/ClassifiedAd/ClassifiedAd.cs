@@ -145,12 +145,12 @@ namespace Marketplace.Domain.ClassifiedAd
                 (State switch
                 {
                     ClassifiedAdState.PendingReview =>
-                        Title != null
-                        && Text != null
+                        Title != (string)null
+                        && Text != (string)null
                         && Price?.Amount > 0,
                     ClassifiedAdState.Active =>
-                        Title != null
-                        && Text != null
+                        Title != (string)null
+                        && Text != (string)null
                         && Price?.Amount > 0
                         && ApprovedBy != null,
                     _ => true
