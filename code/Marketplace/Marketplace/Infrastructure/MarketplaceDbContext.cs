@@ -6,18 +6,20 @@ using Microsoft.Extensions.Logging;
 
 namespace Marketplace.Infrastructure
 {
-    public class ClassifiedAdDbContext : DbContext
+    public class MarketplaceDbContext : DbContext
     {
         private readonly ILoggerFactory _loggerFactory;
 
         // ReSharper disable once SuggestBaseTypeForParameter
-        public ClassifiedAdDbContext(
-            DbContextOptions<ClassifiedAdDbContext> options,
+        public MarketplaceDbContext(
+            DbContextOptions<MarketplaceDbContext> options,
             ILoggerFactory loggerFactory)
         : base(options) => _loggerFactory = loggerFactory;
 
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public DbSet<Domain.ClassifiedAd.ClassifiedAd> ClassifiedAds { get; set; }
+
+        public DbSet<Domain.UserProfile.UserProfile> UserProfiles { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -29,6 +31,7 @@ namespace Marketplace.Infrastructure
         {
             modelBuilder.ApplyConfiguration(new ClassifiedAdEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new PictureEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new UserProfileEntityTypeConfiguration());
         }
     }
 
@@ -57,12 +60,23 @@ namespace Marketplace.Infrastructure
         }
     }
 
+    public class UserProfileEntityTypeConfiguration : IEntityTypeConfiguration<Domain.UserProfile.UserProfile>
+    {
+        public void Configure(EntityTypeBuilder<Domain.UserProfile.UserProfile> builder)
+        {
+            builder.HasKey(x => x.UserProfileId);
+            builder.OwnsOne(x => x.Id);
+            builder.OwnsOne(x => x.DisplayName);
+            builder.OwnsOne(x => x.FullName);
+        }
+    }
+
     public static class AppBuilderDatabaseExtensions
     {
         public static void EnsureDatabase(this IApplicationBuilder app)
         {
-            var context = (ClassifiedAdDbContext)app.ApplicationServices
-                .GetService(typeof(ClassifiedAdDbContext));
+            var context = (MarketplaceDbContext)app.ApplicationServices
+                .GetService(typeof(MarketplaceDbContext));
 
             if (!context.Database.EnsureCreated())
                 context.Database.Migrate();

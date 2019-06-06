@@ -7,9 +7,9 @@ using Marketplace.Infrastructure;
 using Marketplace.UserProfile;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Raven.Client.Documents;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace Marketplace
@@ -30,45 +30,51 @@ namespace Marketplace
             var purgomalumClient = new PurgomalumClient();
             
             // RavenDb ======================================================
-            // setup RavenDb
-            var store = new DocumentStore
-            {
-                Urls = new[] {"http://localhost:8080"},
-                Database = "Marketplace_Chapter9",
-                Conventions =
-                {
-                    FindIdentityProperty = m => m.Name == "DbId"
-                }
-            };
-            store.Initialize();
-
-            services.AddSingleton<ICurrencyLookup, FixedCurrencyLookup>();
-            services.AddScoped(c => store.OpenAsyncSession());
-            services.AddScoped<IUnitOfWork, RavenDbUnitOfWork>();
-            services.AddScoped<IClassifiedAdRepository, ClassifiedAdRepository>();
-            services.AddScoped<IUserProfileRepository, UserProfileRepository>();
-            services.AddScoped<ClassifiedAdsApplicationService>();
-            services.AddScoped(c =>
-                new UserProfileApplicationService(
-                    c.GetService<IUserProfileRepository>(),
-                    c.GetService<IUnitOfWork>(),
-                    text => purgomalumClient.CheckForProfanity(text)
-                        .GetAwaiter().GetResult()));
+//            // setup RavenDb
+//            var store = new DocumentStore
+//            {
+//                Urls = new[] {"http://localhost:8080"},
+//                Database = "Marketplace_Chapter9",
+//                Conventions =
+//                {
+//                    FindIdentityProperty = m => m.Name == "DbId"
+//                }
+//            };
+//            store.Initialize();
+//
+//            services.AddSingleton<ICurrencyLookup, FixedCurrencyLookup>();
+//            services.AddScoped(c => store.OpenAsyncSession());
+//            services.AddScoped<IUnitOfWork, RavenDbUnitOfWork>();
+//            services.AddScoped<IClassifiedAdRepository, ClassifiedAdRepository>();
+//            services.AddScoped<IUserProfileRepository, UserProfileRepository>();
+//            services.AddScoped<ClassifiedAdsApplicationService>();
+//            services.AddScoped(c =>
+//                new UserProfileApplicationService(
+//                    c.GetService<IUserProfileRepository>(),
+//                    c.GetService<IUnitOfWork>(),
+//                    text => purgomalumClient.CheckForProfanity(text)
+//                        .GetAwaiter().GetResult()));
             // End RavenDb ==================================================
             
             
             
             // EF-Core ======================================================
-//            const string connectionString = "Host=localhost;Database=Marketplace_Chapter8;Username=ddd;Password=book";
-//            services
-//                .AddEntityFrameworkNpgsql()
-//                .AddDbContext<ClassifiedAdDbContext>(
-//                    options => options.UseNpgsql(connectionString));
-//
-//            services.AddSingleton<ICurrencyLookup, FixedCurrencyLookup>();
-//            services.AddScoped<IUnitOfWork, EfCoreUnitOfWork>();
-//            services.AddScoped<IClassifiedAdRepository, ClassifiedAdRepository>();
-//            services.AddScoped<ClassifiedAdsApplicationService>();
+            const string connectionString = "Host=localhost;Database=Marketplace_Chapter8;Username=ddd;Password=book";
+            services
+                .AddEntityFrameworkNpgsql()
+                .AddDbContext<MarketplaceDbContext>(
+                    options => options.UseNpgsql(connectionString));
+
+            services.AddSingleton<ICurrencyLookup, FixedCurrencyLookup>();
+            services.AddScoped<IUnitOfWork, EfCoreUnitOfWork>();
+            services.AddScoped<IClassifiedAdRepository, ClassifiedAdRepository>();
+            services.AddScoped<IUserProfileRepository, UserProfileRepository>();
+            services.AddScoped<ClassifiedAdsApplicationService>();
+            services.AddScoped(c => 
+                new UserProfileApplicationService(
+                    c.GetService<IUserProfileRepository>(),
+                    c.GetService<IUnitOfWork>(),
+                    text => purgomalumClient.CheckForProfanity(text).GetAwaiter().GetResult()));
             // End EF-Core ==================================================
             
             
@@ -89,7 +95,7 @@ namespace Marketplace
                 app.UseDeveloperExceptionPage();
             }
 
-//            app.EnsureDatabase(); // <- only for EF-Core!!
+            app.EnsureDatabase(); // <- only for EF-Core!!
             
             app.UseMvcWithDefaultRoute();
             app.UseSwagger();

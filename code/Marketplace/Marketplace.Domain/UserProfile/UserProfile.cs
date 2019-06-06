@@ -6,12 +6,16 @@ namespace Marketplace.Domain.UserProfile
 {
     public class UserProfile : AggregateRoot<UserId>
     {
-        // Properties to handle the persistence
+        // Properties to handle the persistence (RavenDb)
         private string DbId
         {
             get => $"UserProfile/{Id.Value}";
             set {}
         }
+        
+        // Properties to handle the persistence (EF)
+        public Guid UserProfileId { get; private set; }
+
         
         // Aggregate state properties
         public FullName FullName { get; private set; }
@@ -55,6 +59,8 @@ namespace Marketplace.Domain.UserProfile
                     Id = new UserId(e.UserId);
                     FullName = new FullName(e.FullName);
                     DisplayName = new DisplayName(e.DisplayName);
+                    
+                    UserProfileId = e.UserId; // <- only for EF!
                     break;
                 case Events.UserFullNameUpdated e:
                     FullName = new FullName(e.FullName);
