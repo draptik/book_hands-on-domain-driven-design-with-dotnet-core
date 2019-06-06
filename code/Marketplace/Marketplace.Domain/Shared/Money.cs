@@ -5,8 +5,6 @@ namespace Marketplace.Domain.Shared
 {
     public class Money : Value<Money>
     {
-        private const string DefaultCurrency = "EUR";
-
         protected Money(decimal amount, string currencyCode, ICurrencyLookup currencyLookup)
         {
             if (string.IsNullOrEmpty(currencyCode))
