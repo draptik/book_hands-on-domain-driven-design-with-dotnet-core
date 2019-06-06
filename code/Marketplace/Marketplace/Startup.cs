@@ -59,7 +59,7 @@ namespace Marketplace
             
             
             // EF-Core ======================================================
-            const string connectionString = "Host=localhost;Database=Marketplace_Chapter8;Username=ddd;Password=book";
+            const string connectionString = "Host=localhost;Database=Marketplace_Chapter9;Username=ddd;Password=book";
             services
                 .AddEntityFrameworkNpgsql()
                 .AddDbContext<MarketplaceDbContext>(
