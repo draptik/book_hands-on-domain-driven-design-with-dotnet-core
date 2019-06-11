@@ -1,4 +1,5 @@
-﻿using Marketplace.ClassifiedAd;
+﻿using System.Data.Common;
+using Marketplace.ClassifiedAd;
 using Marketplace.Domain.ClassifiedAd;
 using Marketplace.Domain.Shared;
 using Marketplace.Domain.UserProfile;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Npgsql;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace Marketplace
@@ -61,6 +63,7 @@ namespace Marketplace
             const string connectionString = "Host=localhost;Database=Marketplace_Chapter9;Username=ddd;Password=book";
             services.AddEntityFrameworkNpgsql();
             services.AddPostgresDbContext<MarketplaceDbContext>(connectionString);
+            services.AddScoped<DbConnection>(c => new NpgsqlConnection(connectionString));
 
             services.AddSingleton<ICurrencyLookup, FixedCurrencyLookup>();
             services.AddScoped<IUnitOfWork, EfCoreUnitOfWork>();

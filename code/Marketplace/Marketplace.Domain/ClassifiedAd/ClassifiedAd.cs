@@ -163,10 +163,10 @@ namespace Marketplace.Domain.ClassifiedAd
         
         public enum ClassifiedAdState
         {
-            PendingReview,
-            Active,
-            Inactive,
-            MarkedAsSold
+            PendingReview = 1, // add 1-based index for EF-Core / Postgres
+            Active = 2,        // add index for EF-Core / Postgres
+            Inactive = 3,      // add index for EF-Core / Postgres
+            MarkedAsSold = 4   // add index for EF-Core / Postgres
         }
         
         private Picture FirstPicture => Pictures.OrderBy(x => x.Order).FirstOrDefault();
