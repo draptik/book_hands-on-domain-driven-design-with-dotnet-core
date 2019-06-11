@@ -11,3 +11,8 @@ Following environments might be tested:
 - Rider: 2019.1
 - Visual Studio 2019
 
+## Usage
+
+- start persistence: `docker-compose up`
+- start application: `F5` (Visual Studio), `Alt-F5` (Rider)
+ 
