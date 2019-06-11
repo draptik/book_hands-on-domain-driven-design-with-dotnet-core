@@ -7,7 +7,6 @@ using Marketplace.Infrastructure;
 using Marketplace.UserProfile;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
@@ -60,10 +59,8 @@ namespace Marketplace
             
             // EF-Core ======================================================
             const string connectionString = "Host=localhost;Database=Marketplace_Chapter9;Username=ddd;Password=book";
-            services
-                .AddEntityFrameworkNpgsql()
-                .AddDbContext<MarketplaceDbContext>(
-                    options => options.UseNpgsql(connectionString));
+            services.AddEntityFrameworkNpgsql();
+            services.AddPostgresDbContext<MarketplaceDbContext>(connectionString);
 
             services.AddSingleton<ICurrencyLookup, FixedCurrencyLookup>();
             services.AddScoped<IUnitOfWork, EfCoreUnitOfWork>();

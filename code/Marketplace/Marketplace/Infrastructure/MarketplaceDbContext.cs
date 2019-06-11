@@ -1,5 +1,4 @@
 using Marketplace.Domain.ClassifiedAd;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.Logging;
@@ -68,18 +67,6 @@ namespace Marketplace.Infrastructure
             builder.OwnsOne(x => x.Id);
             builder.OwnsOne(x => x.DisplayName);
             builder.OwnsOne(x => x.FullName);
-        }
-    }
-
-    public static class AppBuilderDatabaseExtensions
-    {
-        public static void EnsureDatabase(this IApplicationBuilder app)
-        {
-            var context = (MarketplaceDbContext)app.ApplicationServices
-                .GetService(typeof(MarketplaceDbContext));
-
-            if (!context.Database.EnsureCreated())
-                context.Database.Migrate();
         }
     }
 }
