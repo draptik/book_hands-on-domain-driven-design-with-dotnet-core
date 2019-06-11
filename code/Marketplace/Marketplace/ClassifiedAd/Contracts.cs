@@ -2,7 +2,7 @@ using System;
 
 namespace Marketplace.ClassifiedAd
 {
-    public static class Commands
+    public static class Contracts
     {
         public static class V1
         {

@@ -6,7 +6,7 @@ namespace Marketplace.Domain.UserProfile
 {
     public class DisplayName : Value<DisplayName>
     {
-        public string Value { get; private set; } // private set required for RavenDb
+        public string Value { get; private set; }
 
         public DisplayName(string displayName) => Value = displayName;
 
@@ -15,7 +15,7 @@ namespace Marketplace.Domain.UserProfile
             if (displayName.IsEmpty())
                 throw new ArgumentNullException(nameof(displayName));
 
-            if (hasProfanity(displayName))
+            if (hasProfanity(displayName).GetAwaiter().GetResult())
                 throw new DomainExceptions.ProfanityFound(displayName);
             
             return new DisplayName(displayName);

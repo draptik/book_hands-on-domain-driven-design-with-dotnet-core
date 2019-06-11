@@ -2,19 +2,12 @@ version: '3.5'
 
 services:
 
-  # ravendb:
-  #   container_name: marketplace-ch9-ravendb
-  #   image: ravendb/ravendb
-  #   ports:
-  #     - 8080:8080
-  #   environment:
-  #     - RAVEN_Security_UnsecuredAccessAllowed=PublicNetwork
-  #     - RAVEN_ARGS="--Setup.Mode=None"
-
-  postgres:
-    container_name: marketplace-ch9-postgres
-    image: postgres
+  eventstore:
+    container_name: marketplace-eventstore
+    image: eventstore/eventstore
     ports:
-      - 5432:5432
-    volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - 2113:2113
+      - 1113:1113
+    environment:
+      - EVENTSTORE_EXT_HTTP_PORT=2113
+      - EVENTSTORE_EXT_TCP_PORT=1113
