@@ -76,6 +76,9 @@ namespace Marketplace.ClassifiedAd
 
             operation(classifiedAd);
 
+            // TODO classifiedAd has the correct state here.
+            // TODO BUT IT IS SAVED WITHOUT CORRECT PRICE INFO!
+            
             await _unitOfWork.Commit();
         }
     }
