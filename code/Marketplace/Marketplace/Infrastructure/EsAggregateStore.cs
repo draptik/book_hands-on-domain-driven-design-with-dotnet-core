@@ -64,8 +64,6 @@ namespace Marketplace.Infrastructure
 
         private static byte[] Serialize(object data) 
             => Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(data));
-
-        
         
         public async Task<T> Load<T, TId>(TId aggregateId) where T : AggregateRoot<TId>
         {
@@ -75,24 +73,13 @@ namespace Marketplace.Infrastructure
             var stream = GetStreamName<T, TId>(aggregateId);
             var aggregate = (T) Activator.CreateInstance(typeof(T), true);
 
-            var page = await _connection.ReadStreamEventsForwardAsync(stream, 0, 1024, false);
+            var page = await _connection.ReadStreamEventsForwardAsync(
+                stream, 0, 1024, false);
 
-            aggregate.Load(page.Events.Select(resolvedEvent =>
-            {
-                var meta = JsonConvert.DeserializeObject<EventMetadata>(
-                    Encoding.UTF8.GetString(resolvedEvent.Event.Metadata));
-                var dataType = Type.GetType(meta.ClrType);
-                var jsonData = Encoding.UTF8.GetString(resolvedEvent.Event.Data);
-                var data = JsonConvert.DeserializeObject(jsonData, dataType);
-                return data;
-            }).ToArray());
+            aggregate.Load(page.Events.Select(resolvedEvent => 
+                resolvedEvent.Deserialize()).ToArray());
 
             return aggregate;
-        }
-        
-        private class EventMetadata
-        {
-            public string ClrType { get; set; }
         }
     }
 }
