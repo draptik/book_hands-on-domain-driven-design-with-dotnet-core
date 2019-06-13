@@ -52,7 +52,7 @@ namespace Marketplace.Domain.ClassifiedAd
             Apply(new Events.ClassifiedAdTextUpdated
             {
                 Id = Id,
-                Text = text
+                AdText = text
             });
 
         public void UpdatePrice(Price price) =>
@@ -113,7 +113,7 @@ namespace Marketplace.Domain.ClassifiedAd
                     Title = new ClassifiedAdTitle(e.Title);
                     break;
                 case Events.ClassifiedAdTextUpdated e:
-                    Text = new ClassifiedAdText(e.Text);
+                    Text = new ClassifiedAdText(e.AdText);
                     break;
                 case Events.ClassifiedAdPriceUpdated e:
                     Price = new Price(e.Price, e.CurrencyCode, e.InUse, e.DecimalPlaces);

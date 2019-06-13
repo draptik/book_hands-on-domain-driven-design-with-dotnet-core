@@ -19,7 +19,7 @@ namespace Marketplace.Domain.ClassifiedAd
         public class ClassifiedAdTextUpdated
         {
             public Guid Id { get; set; }
-            public string Text { get; set; }
+            public string AdText { get; set; }
         }
 
         public class ClassifiedAdPriceUpdated
