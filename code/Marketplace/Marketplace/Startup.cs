@@ -43,7 +43,7 @@ namespace Marketplace
             services.AddSingleton(new UserProfileApplicationService(
                 store, t => purgomalumClient.CheckForProfanity(t)));
 
-            services.AddSingleton<IHostedService, HostedService>();
+            services.AddSingleton<IHostedService, EventStoreService>();
             services.AddMvc();
             services.AddSwaggerGen(c =>
             {

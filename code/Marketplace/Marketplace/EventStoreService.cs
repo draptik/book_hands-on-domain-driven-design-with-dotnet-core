@@ -5,11 +5,11 @@ using Microsoft.Extensions.Hosting;
 
 namespace Marketplace
 {
-    public class HostedService : IHostedService
+    public class EventStoreService : IHostedService
     {
         private readonly IEventStoreConnection _esConnection;
 
-        public HostedService(IEventStoreConnection esConnection) => _esConnection = esConnection;
+        public EventStoreService(IEventStoreConnection esConnection) => _esConnection = esConnection;
 
         public Task StartAsync(CancellationToken cancellationToken)
             => _esConnection.ConnectAsync();
