@@ -65,6 +65,10 @@ namespace Marketplace.Infrastructure
                         ad.CurrencyCode = e.CurrencyCode;
                     });
                     break;
+                case Domain.UserProfile.Events.UserDisplayNameUpdated e:
+                    UpdateMultipleItems(x => x.SellerId == e.UserId,
+                        x => x.SellersDisplayName = e.DisplayName);
+                    break;
             }
 
             return Task.CompletedTask;
@@ -77,6 +81,14 @@ namespace Marketplace.Infrastructure
                 return;
 
             update(item);
+        }
+
+        private void UpdateMultipleItems(
+            Func<ReadModels.ClassifiedAdDetails, bool> query, 
+            Action<ReadModels.ClassifiedAdDetails> update)
+        {
+            foreach (var item in _items.Where(query))
+                update(item);
         }
 
         public void Stop() => _subscription.Stop();
