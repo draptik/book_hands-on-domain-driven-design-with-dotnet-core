@@ -9,24 +9,24 @@ namespace Marketplace
     public class EventStoreService : IHostedService
     {
         private readonly IEventStoreConnection _esConnection;
-        private readonly ProjectionsManager _subscription;
+        private readonly ProjectionManager _projectionManager;
 
         public EventStoreService(IEventStoreConnection esConnection,
-            ProjectionsManager subscription)
+            ProjectionManager projectionManager)
         {
             _esConnection = esConnection;
-            _subscription = subscription;
+            _projectionManager = projectionManager;
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             await _esConnection.ConnectAsync();
-            _subscription.Start();
+            _projectionManager.Start();
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            _subscription.Stop();
+            _projectionManager.Stop();
             _esConnection.Close();
             return Task.CompletedTask;
         }

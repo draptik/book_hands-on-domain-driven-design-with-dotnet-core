@@ -1,25 +1,25 @@
-using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using EventStore.ClientAPI;
-using Marketplace.ClassifiedAd;
+using Marketplace.Framework;
 using Serilog.Events;
 using ILogger = Serilog.ILogger;
 
 namespace Marketplace.Infrastructure
 {
-    public class ProjectionsManager
+    public class ProjectionManager
     {
-        private static readonly ILogger Log = Serilog.Log.ForContext<ProjectionsManager>();
+        private static readonly ILogger Log = Serilog.Log.ForContext<ProjectionManager>();
         
         private readonly IEventStoreConnection _connection;
-        private readonly IList<ReadModels.ClassifiedAdDetails> _items;
+        private readonly IProjection[] _projections;
         private EventStoreAllCatchUpSubscription _subscription;
 
-        public ProjectionsManager(IEventStoreConnection connection,
-            IList<ReadModels.ClassifiedAdDetails> items)
+        public ProjectionManager(IEventStoreConnection connection,
+            params IProjection[] projections)
         {
             _connection = connection;
-            _items = items;
+            _projections = projections;
         }
 
         public void Start()
@@ -40,8 +40,7 @@ namespace Marketplace.Infrastructure
             var @event = resolvedEvent.Deserialize();
             Log.Debug("Projecting event {type}", @event.GetType().Name);
 
-            // TODO
-            return Task.CompletedTask;
+            return Task.WhenAll(_projections.Select(x => x.Project(@event)));
         }
 
         public void Stop() => _subscription.Stop();

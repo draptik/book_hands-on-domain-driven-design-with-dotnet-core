@@ -3,6 +3,7 @@ using EventStore.ClientAPI;
 using Marketplace.ClassifiedAd;
 using Marketplace.Framework;
 using Marketplace.Infrastructure;
+using Marketplace.Projections;
 using Marketplace.UserProfile;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -45,11 +46,17 @@ namespace Marketplace
                 store, t => purgomalumClient.CheckForProfanity(t)));
 
             // 'In-Memory' solution for read models
-            var items = new List<ReadModels.ClassifiedAdDetails>();
-            services.AddSingleton<IEnumerable<ReadModels.ClassifiedAdDetails>>(items);
-            var subscription = new ProjectionsManager(esConnection, items);
+            var classifiedAdDetails = new List<ReadModels.ClassifiedAdDetails>();
+            services.AddSingleton<IEnumerable<ReadModels.ClassifiedAdDetails>>(classifiedAdDetails);
 
-            services.AddSingleton<IHostedService>(new EventStoreService(esConnection, subscription));
+            var userDetails = new List<ReadModels.UserDetails>();
+            services.AddSingleton<IEnumerable<ReadModels.UserDetails>>(userDetails);
+
+            var projectionManager = new ProjectionManager(esConnection,
+                new ClassifiedAdDetailsProjection(classifiedAdDetails),
+                new UserDetailsProjection(userDetails));
+
+            services.AddSingleton<IHostedService>(new EventStoreService(esConnection, projectionManager));
             
             
             services.AddMvc();
