@@ -48,7 +48,8 @@ namespace Marketplace.Infrastructure
                 case Events.ClassifiedAdCreated e:
                     _items.Add(new ReadModels.ClassifiedAdDetails
                     {
-                        ClassifiedAdId = e.Id
+                        ClassifiedAdId = e.Id,
+                        SellerId = e.OwnerId
                     });
                     break;
                 case Events.ClassifiedAdTitleChanged e:
