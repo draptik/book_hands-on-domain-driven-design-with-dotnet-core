@@ -9,10 +9,10 @@ namespace Marketplace
     public class EventStoreService : IHostedService
     {
         private readonly IEventStoreConnection _esConnection;
-        private readonly EsSubscription _subscription;
+        private readonly ProjectionsManager _subscription;
 
         public EventStoreService(IEventStoreConnection esConnection,
-            EsSubscription subscription)
+            ProjectionsManager subscription)
         {
             _esConnection = esConnection;
             _subscription = subscription;

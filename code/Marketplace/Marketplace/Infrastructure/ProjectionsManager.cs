@@ -10,15 +10,15 @@ using ILogger = Serilog.ILogger;
 
 namespace Marketplace.Infrastructure
 {
-    public class EsSubscription
+    public class ProjectionsManager
     {
-        private static readonly ILogger Log = Serilog.Log.ForContext<EsSubscription>();
+        private static readonly ILogger Log = Serilog.Log.ForContext<ProjectionsManager>();
         
         private readonly IEventStoreConnection _connection;
         private readonly IList<ReadModels.ClassifiedAdDetails> _items;
         private EventStoreAllCatchUpSubscription _subscription;
 
-        public EsSubscription(IEventStoreConnection connection,
+        public ProjectionsManager(IEventStoreConnection connection,
             IList<ReadModels.ClassifiedAdDetails> items)
         {
             _connection = connection;

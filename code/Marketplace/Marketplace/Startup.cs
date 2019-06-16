@@ -47,7 +47,7 @@ namespace Marketplace
             // 'In-Memory' solution for read models
             var items = new List<ReadModels.ClassifiedAdDetails>();
             services.AddSingleton<IEnumerable<ReadModels.ClassifiedAdDetails>>(items);
-            var subscription = new EsSubscription(esConnection, items);
+            var subscription = new ProjectionsManager(esConnection, items);
 
             services.AddSingleton<IHostedService>(new EventStoreService(esConnection, subscription));
             
