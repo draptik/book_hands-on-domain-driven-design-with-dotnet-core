@@ -52,6 +52,14 @@ namespace Marketplace
             var userDetails = new List<ReadModels.UserDetails>();
             services.AddSingleton<IEnumerable<ReadModels.UserDetails>>(userDetails);
 
+            // NOTE: "projection" describes process:
+            //
+            //     some event happened -> update read model(s)
+            //
+            // Currently: All events are persisted to EventStore.
+            //    Read models (in memory):
+            //        - 'classifiedAdDetails'
+            //        - 'userDetails'
             var projectionManager = new ProjectionManager(esConnection,
                 new ClassifiedAdDetailsProjection(classifiedAdDetails),
                 new UserDetailsProjection(userDetails));
