@@ -8,12 +8,6 @@ namespace Marketplace.Domain.ClassifiedAd
 {
     public class ClassifiedAd : AggregateRoot<ClassifiedAdId>
     {
-        // Properties to handle the persistence (RavenDb)
-        private string DbId
-        {
-            get => $"ClassifiedAd/{Id.Value}";
-            set {}
-        }
         
         // Properties to handle the persistence (EF)
         public Guid ClassifiedAdId { get; private set; }
@@ -104,15 +98,7 @@ namespace Marketplace.Domain.ClassifiedAd
                     Id = new ClassifiedAdId(e.Id);
                     OwnerId = new UserId(e.OwnerId);
                     State = ClassifiedAdState.Inactive;
-
-                    // optional properties
-                    Title = ClassifiedAdTitle.NoTitle; // EF-only!
-                    Text = ClassifiedAdText.NoText; // EF-only!
-                    Price = Price.NoPrice; // EF-only!
-                    ApprovedBy = UserId.NoUser; // EF-only!
-                    
-                    // required for persistence (EF)
-                    ClassifiedAdId = e.Id; // EF-only!
+                    Pictures = new List<Picture>();
                     break;
                 case Events.ClassifiedAdTitleChanged e:
                     Title = new ClassifiedAdTitle(e.Title);

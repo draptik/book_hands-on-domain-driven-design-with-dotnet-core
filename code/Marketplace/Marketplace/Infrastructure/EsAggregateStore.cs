@@ -37,12 +37,6 @@ namespace Marketplace.Infrastructure
             aggregate.ClearChanges();
         }
 
-        private static string GetStreamName<T, TId>(T aggregate) where T : AggregateRoot<TId> 
-            => $"{typeof(T).Name}-{aggregate.Id.ToString()}";
-
-        private static string GetStreamName<T, TId>(TId aggregateId) 
-            => $"{typeof(T).Name}-{aggregateId.ToString()}";
-        
         public async Task<T> Load<T, TId>(TId aggregateId) where T : AggregateRoot<TId>
         {
             if (aggregateId == null)
@@ -59,5 +53,11 @@ namespace Marketplace.Infrastructure
 
             return aggregate;
         }
+        
+        private static string GetStreamName<T, TId>(T aggregate) where T : AggregateRoot<TId> 
+            => $"{typeof(T).Name}-{aggregate.Id.ToString()}";
+
+        private static string GetStreamName<T, TId>(TId aggregateId) 
+            => $"{typeof(T).Name}-{aggregateId.ToString()}";
     }
 }

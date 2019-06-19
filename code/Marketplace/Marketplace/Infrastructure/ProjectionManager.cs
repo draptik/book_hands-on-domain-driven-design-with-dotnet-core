@@ -36,6 +36,8 @@ namespace Marketplace.Infrastructure
             _subscription = _connection.SubscribeToAllFrom(position, settings, EventAppeared);
         }
 
+        public void Stop() => _subscription.Stop();
+        
         private async Task EventAppeared(EventStoreCatchUpSubscription subscription, ResolvedEvent resolvedEvent)
         {
             if (resolvedEvent.Event.EventType.StartsWith("$"))
@@ -48,7 +50,5 @@ namespace Marketplace.Infrastructure
 
             await _checkpointStore.StoreCheckpoint(resolvedEvent.OriginalPosition.Value);
         }
-
-        public void Stop() => _subscription.Stop();
     }
 }
