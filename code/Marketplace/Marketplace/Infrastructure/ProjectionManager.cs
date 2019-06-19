@@ -12,35 +12,41 @@ namespace Marketplace.Infrastructure
         private static readonly ILogger Log = Serilog.Log.ForContext<ProjectionManager>();
         
         private readonly IEventStoreConnection _connection;
+        private readonly ICheckpointStore _checkpointStore;
         private readonly IProjection[] _projections;
         private EventStoreAllCatchUpSubscription _subscription;
 
-        public ProjectionManager(IEventStoreConnection connection,
+        public ProjectionManager(
+            IEventStoreConnection connection,
+            ICheckpointStore checkpointStore,
             params IProjection[] projections)
         {
             _connection = connection;
+            _checkpointStore = checkpointStore;
             _projections = projections;
         }
 
-        public void Start()
+        public async Task Start()
         {
             var settings = new CatchUpSubscriptionSettings(2000, 500,
                 Log.IsEnabled(LogEventLevel.Verbose),
                 false, "try-out-subscription");
 
-            _subscription = _connection.SubscribeToAllFrom(
-                Position.Start, settings, EventAppeared);
+            var position = await _checkpointStore.GetCheckpoint();
+            _subscription = _connection.SubscribeToAllFrom(position, settings, EventAppeared);
         }
 
-        private Task EventAppeared(EventStoreCatchUpSubscription subscription, ResolvedEvent resolvedEvent)
+        private async Task EventAppeared(EventStoreCatchUpSubscription subscription, ResolvedEvent resolvedEvent)
         {
             if (resolvedEvent.Event.EventType.StartsWith("$"))
-                return Task.CompletedTask;
+                return;
 
             var @event = resolvedEvent.Deserialize();
             Log.Debug("Projecting event {type}", @event.GetType().Name);
 
-            return Task.WhenAll(_projections.Select(x => x.Project(@event)));
+            await Task.WhenAll(_projections.Select(x => x.Project(@event)));
+
+            await _checkpointStore.StoreCheckpoint(resolvedEvent.OriginalPosition.Value);
         }
 
         public void Stop() => _subscription.Stop();
