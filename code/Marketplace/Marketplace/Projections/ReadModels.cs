@@ -1,6 +1,6 @@
 using System;
 
-namespace Marketplace.ClassifiedAd
+namespace Marketplace.Projections
 {
     public static class ReadModels
     {
@@ -19,7 +19,7 @@ namespace Marketplace.ClassifiedAd
 
         public class UserDetails
         {
-            public Guid UserId { get; set; }
+            public string Id { get; set; }
             public string DisplayName { get; set; }
             public string PhotoUrl { get; set; }
         }

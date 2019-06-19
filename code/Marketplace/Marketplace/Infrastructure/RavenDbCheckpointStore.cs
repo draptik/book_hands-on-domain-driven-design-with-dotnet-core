@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using EventStore.ClientAPI;
 using Marketplace.Framework;
-using Raven.Client;
+using Raven.Client.Documents.Session;
 
 namespace Marketplace.Infrastructure
 {
