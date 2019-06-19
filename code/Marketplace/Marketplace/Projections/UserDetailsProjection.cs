@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using Marketplace.ClassifiedAd;
 using Marketplace.Domain.UserProfile;
 using Marketplace.Infrastructure;
 using Raven.Client.Documents.Session;
@@ -13,6 +12,7 @@ namespace Marketplace.Projections
         {
         }
 
+        // @formatter:off
         public override Task Project(object @event) =>
             @event switch
                 {
@@ -32,5 +32,6 @@ namespace Marketplace.Projections
                 UpdateOne(e.UserId, x => x.PhotoUrl = e.PhotoUrl),
                 _ => Task.CompletedTask
                 };
+        // @formatter:on
     }
 }

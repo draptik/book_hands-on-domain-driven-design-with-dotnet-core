@@ -40,6 +40,11 @@ namespace Marketplace.Projections
                     UpdateWhere(
                         x => x.SellerId == e.UserId,
                         x => x.SellersDisplayName = e.DisplayName),
+                // also update when user photo changes AFTER ad has already been published:
+                Domain.UserProfile.Events.ProfilePhotoUploaded e =>
+                    UpdateWhere(
+                        x => x.SellerId == e.UserId,
+                        x => x.SellersPhotoUrl = e.PhotoUrl),
                 ClassifiedAdUpcastedEvents.V1.ClassifiedAdPublished e =>
                     UpdateOne(e.Id, ad => ad.SellersPhotoUrl = e.SellersPhotoUrl),
                 _ => Task.CompletedTask
