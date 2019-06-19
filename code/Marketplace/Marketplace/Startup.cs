@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using EventStore.ClientAPI;
 using Marketplace.ClassifiedAd;
 using Marketplace.Framework;
@@ -61,8 +62,13 @@ namespace Marketplace
             //        - 'classifiedAdDetails'
             //        - 'userDetails'
             var projectionManager = new ProjectionManager(esConnection,
-                new ClassifiedAdDetailsProjection(classifiedAdDetails),
-                new UserDetailsProjection(userDetails));
+                new ClassifiedAdDetailsProjection(classifiedAdDetails,
+                    userId => userDetails.FirstOrDefault(
+                        x => x.UserId == userId)?.DisplayName),
+                new UserDetailsProjection(userDetails),
+                new ClassifiedAdUpcasters(esConnection,
+                    userId => userDetails.FirstOrDefault(
+                        x => x.UserId == userId)?.PhotoUrl));
 
             services.AddSingleton<IHostedService>(new EventStoreService(esConnection, projectionManager));
             

@@ -89,7 +89,12 @@ namespace Marketplace.Domain.ClassifiedAd
             Apply(new Events.ClassifiedAdSentForReview {Id = Id});
 
         public void Publish(UserId userId) =>
-            Apply(new Events.ClassifiedAdPublished {Id = Id, ApprovedBy = userId});
+            Apply(new Events.ClassifiedAdPublished
+            {
+                Id = Id, 
+                ApprovedBy = userId,
+                OwnerId = OwnerId
+            });
 
         protected override void When(object @event)
         {

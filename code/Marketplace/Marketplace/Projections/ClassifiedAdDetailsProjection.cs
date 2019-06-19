@@ -5,16 +5,19 @@ using System.Threading.Tasks;
 using Marketplace.ClassifiedAd;
 using Marketplace.Domain.ClassifiedAd;
 using Marketplace.Framework;
+using Contracts = Marketplace.UserProfile.Contracts;
 
 namespace Marketplace.Projections
 {
     public class ClassifiedAdDetailsProjection : IProjection
     {
         private readonly List<ReadModels.ClassifiedAdDetails> _items;
+        private readonly Func<Guid, string> _getUserDisplayName;
 
-        public ClassifiedAdDetailsProjection(List<ReadModels.ClassifiedAdDetails> items)
+        public ClassifiedAdDetailsProjection(List<ReadModels.ClassifiedAdDetails> items, Func<Guid, string> getUserDisplayName)
         {
             _items = items;
+            _getUserDisplayName = getUserDisplayName;
         }
 
         public Task Project(object @event)
@@ -25,7 +28,8 @@ namespace Marketplace.Projections
                     _items.Add(new ReadModels.ClassifiedAdDetails
                     {
                         ClassifiedAdId = e.Id,
-                        SellerId = e.OwnerId
+                        SellerId = e.OwnerId,
+                        SellersDisplayName = _getUserDisplayName(e.OwnerId)
                     });
                     break;
                 case Events.ClassifiedAdTitleChanged e:
@@ -44,6 +48,9 @@ namespace Marketplace.Projections
                 case Domain.UserProfile.Events.UserDisplayNameUpdated e:
                     UpdateMultipleItems(x => x.SellerId == e.UserId,
                         x => x.SellersDisplayName = e.DisplayName);
+                    break;
+                case ClassifiedAdUpcastedEvents.V1.ClassifiedAdPublished e:
+                    UpdateItem(e.Id, ad => ad.SellersPhotoUrl = e.SellersPhotoUrl);
                     break;
             }
             
