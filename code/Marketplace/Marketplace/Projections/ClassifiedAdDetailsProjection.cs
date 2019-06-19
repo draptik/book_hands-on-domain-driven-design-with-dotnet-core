@@ -22,7 +22,7 @@ namespace Marketplace.Projections
                 Events.ClassifiedAdCreated e =>
                     Create(async () => new ReadModels.ClassifiedAdDetails
                     {
-                        ClassifiedAdId = e.Id,
+                        Id = e.Id.ToString(),
                         SellerId = e.OwnerId,
                         SellersDisplayName = await _getUserDisplayName(e.OwnerId)
                     }),
