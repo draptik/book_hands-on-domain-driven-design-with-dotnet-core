@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using Marketplace.Domain;
 using Marketplace.Domain.ClassifiedAd;
 using Marketplace.Domain.Shared;
@@ -29,6 +30,7 @@ namespace Marketplace.Tests
         [Fact]
         public void FromString_and_FromDecimal_should_be_equal()
         {
+            CultureInfo.CurrentCulture = new CultureInfo("en-GB");
             var firstAmount = Money.FromDecimal(5, "EUR", CurrencyLookup);
             var secondAmount = Money.FromString("5.00", "EUR", CurrencyLookup);
             Assert.Equal(firstAmount, secondAmount);
