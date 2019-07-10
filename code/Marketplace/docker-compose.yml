@@ -2,6 +2,15 @@ version: '3.5'
 
 services:
 
+  ravendb:
+    container_name: marketplace-ch11
+    image: ravendb/ravendb
+    ports:
+      - 8080:8080
+    environment:
+      - RAVEN_Security_UnsecuredAccessAllowed=PublicNetwork
+      - RAVEN_ARGS="--Setup.Mode=None"
+
   eventstore:
     container_name: marketplace-eventstore
     image: eventstore/eventstore

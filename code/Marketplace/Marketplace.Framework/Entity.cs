@@ -11,9 +11,6 @@ namespace Marketplace.Framework
 
         protected Entity(Action<object> applier) => _applier = applier;
 
-        // required for persistence
-        protected Entity() {}
-        
         protected abstract void When(object @event);
 
         protected void Apply(object @event)

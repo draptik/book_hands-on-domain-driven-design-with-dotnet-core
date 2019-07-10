@@ -2,8 +2,8 @@ using System.Threading.Tasks;
 
 namespace Marketplace.Framework
 {
-    public interface IUnitOfWork
+    public interface IProjection
     {
-        Task Commit();
+        Task Project(object @event);
     }
 }
